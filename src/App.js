@@ -253,9 +253,6 @@ const AIAssistant = () => {
 
 /* ─── NAVBAR ────────────────────────────────────────────────────────────── */
 const Navbar = ({ page, go, scrolled }) => {
-  // Hauteur approximative de la top bar (padding 11px * 2 + contenu ~18px = ~40px)
-  const topBarHeight = 40;
-  
   return (
     <nav style={{ 
       width:"100%", 
