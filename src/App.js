@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Target, Search, Sparkles, Award, ArrowRight, Globe, MapPin, ChevronRight, Cpu, Zap, Wand2, Loader2, Send, Bot, X, Video, PenTool, PanelsTopLeft, Menu } from "lucide-react";
+import { Target, Search, Sparkles, Award, ArrowRight, Globe, MapPin, ChevronRight, Cpu, Zap, Wand2, Loader2, Send, Bot, X, Video, PenTool, PanelsTopLeft } from "lucide-react";
 
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────────────── */
 const GlobalStyles = () => (
@@ -588,9 +588,9 @@ const Home = ({ go }) => {
                 </div>
               </Reveal>
               <Reveal delay={.3}>
-                <a href="#" style={{ display:"inline-flex", alignItems:"center", gap:10, fontFamily:"var(--font-body)", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.15em", color:"#60a5fa", fontStyle:"italic", textDecoration:"underline", textUnderlineOffset:8 }}>
+                <button onClick={()=>{}} style={{ display:"inline-flex", alignItems:"center", gap:10, fontFamily:"var(--font-body)", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.15em", color:"#60a5fa", fontStyle:"italic", textDecoration:"underline", textUnderlineOffset:8, background:"none", border:"none", cursor:"pointer" }}>
                   Suivre mes analyses sur LinkedIn <ArrowRight size={16}/>
-                </a>
+                </button>
               </Reveal>
             </div>
           </div>
