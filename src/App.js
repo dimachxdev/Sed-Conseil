@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Target, Search, Sparkles, Award, ArrowRight, Globe, MapPin, ChevronRight, Cpu, Zap, Wand2, Loader2, Send, Bot, X } from "lucide-react";
+import { Target, Search, Sparkles, Award, ArrowRight, Globe, MapPin, ChevronRight, Cpu, Zap, Wand2, Loader2, Send, Bot, X, Video, PenTool, PanelsTopLeft, Menu } from "lucide-react";
 
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────────────── */
 const GlobalStyles = () => (
@@ -127,10 +127,99 @@ const GlobalStyles = () => (
     ::-webkit-scrollbar-thumb { background:#e2e8f0; border-radius:3px; }
     ::-webkit-scrollbar-thumb:hover { background:#cbd5e1; }
 
+    /* ─── HAMBURGER MENU ─── */
+    .hamburger { display:none; background:none; border:none; cursor:pointer; padding:8px; z-index:100; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--blue-night); margin:5px 0; border-radius:2px; transition:all .3s cubic-bezier(.16,1,.3,1); }
+    .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity:0; }
+    .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+    .mobile-nav-overlay { 
+      position:fixed; top:0; left:0; right:0; bottom:0; z-index:999;
+      background:var(--blue-night); 
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:32px;
+      opacity:0; pointer-events:none; transition:opacity .35s ease;
+    }
+    .mobile-nav-overlay.open { opacity:1; pointer-events:all; }
+    .mobile-nav-overlay .nav-link { font-size:14px !important; letter-spacing:0.3em !important; color:rgba(255,255,255,.6) !important; }
+    .mobile-nav-overlay .nav-link:hover, .mobile-nav-overlay .nav-link.active { color:var(--blue-ia) !important; }
+    .mobile-nav-overlay .nav-link::after { background:var(--blue-ia) !important; }
+    .mobile-nav-overlay .mobile-close-btn { position:absolute; top:24px; right:24px; background:none; border:none; color:white; cursor:pointer; padding:8px; }
+
+    /* ─── TOP BAR RESPONSIVE ─── */
+    .top-bar-locations { display:flex; align-items:center; gap:26px; }
+    .top-bar-tagline { display:flex; align-items:center; gap:8px; font-style:italic; }
+
+    /* ─── TABLET (769px — 1024px) ─── */
+    @media (max-width: 1024px) {
+      .founder-section { grid-template-columns: 1fr !important; gap: 56px !important; padding: 48px 40px !important; }
+      .expertises-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .blog-featured { grid-template-columns: 1fr !important; }
+      .blog-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .crea-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+      .about-grid { grid-template-columns: 1fr !important; gap: 56px !important; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr !important; gap: 32px !important; }
+      .home-expertises-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .expertise-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+      .crea-cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .founder-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+    }
+
+    /* ─── MOBILE (≤768px) ─── */
     @media (max-width: 768px) {
-      .founder-section { grid-template-columns: 1fr !important; gap: 48px !important; padding: 48px 32px !important; }
+      .hamburger { display:block; }
+      .desktop-nav { display:none !important; }
+
+      .top-bar-locations { gap:14px !important; }
+      .top-bar-locations span { font-size:8px !important; }
+      .top-bar-tagline { font-size:8px !important; }
+
       nav { padding: 12px 0 !important; }
-      nav .nav-link { font-size: 11px !important; }
+
+      .founder-section { grid-template-columns: 1fr !important; gap: 36px !important; padding: 32px 24px !important; }
+      .expertises-grid { grid-template-columns: 1fr !important; }
+      .expertises-grid .glass { padding: 28px 24px !important; border-radius: 2rem !important; }
+      .blog-featured { grid-template-columns: 1fr !important; }
+      .blog-featured-visual { min-height: 220px !important; }
+      .blog-grid { grid-template-columns: 1fr !important; }
+      .crea-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+      .about-grid { grid-template-columns: 1fr !important; gap: 44px !important; }
+      .home-expertises-grid { grid-template-columns: 1fr !important; }
+      .home-expertises-grid .glass { padding: 28px 24px !important; border-radius: 2rem !important; }
+      .card-hover.glass { padding: 28px 24px !important; border-radius: 2rem !important; }
+      .expertise-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+      .crea-cards-grid { grid-template-columns: 1fr !important; }
+      .founder-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+      .final-cta-box { border-radius: 2rem !important; }
+      .hero-cta-row { flex-direction: column !important; align-items: flex-start !important; gap: 24px !important; }
+      .stats-row { grid-template-columns: 1fr 1fr !important; }
+      .footer-grid { grid-template-columns: 1fr !important; gap: 36px !important; text-align:center; }
+      .footer-grid > div { align-items:center !important; }
+
+      .audit-form-grid { grid-template-columns: 1fr !important; }
+      .maturity-grid { grid-template-columns: 1fr !important; }
+
+      .btn-primary { padding:18px 32px !important; font-size:13px !important; }
+      .btn-audit { padding:11px 18px !important; font-size:9px !important; }
+      .maturity-btn { padding:24px 28px !important; }
+
+      .section-padding-lg { padding-top:72px !important; padding-bottom:72px !important; }
+      .section-padding-xl { padding-top:100px !important; padding-bottom:72px !important; }
+
+      .cta-box { padding:48px 28px !important; border-radius:2.5rem !important; }
+      .vision-box { padding:32px 28px !important; border-radius:2.5rem !important; }
+      .audit-card { padding:36px 28px !important; border-radius:2.5rem !important; }
+
+      .chat-widget { width:calc(100vw - 32px) !important; height:calc(100vh - 120px) !important; max-height:500px !important; right:16px !important; bottom:16px !important; border-radius:2rem !important; }
+
+      .blog-cta-box { padding:56px 28px !important; border-radius:2.5rem !important; }
+    }
+
+    /* ─── SMALL MOBILE (≤480px) ─── */
+    @media (max-width: 480px) {
+      .top-bar-locations span:not(:first-child) { display:none; }
+      .btn-primary { padding:16px 26px !important; font-size:12px !important; gap:8px !important; }
+      .badge { font-size:8px !important; padding:8px 14px !important; gap:7px !important; }
     }
   `}</style>
 );
@@ -197,7 +286,7 @@ const AIAssistant = () => {
   return (
     <div style={{ position:"fixed", bottom:24, right:24, zIndex:200 }}>
       {open ? (
-        <div className="slide-up glass" style={{ width:356, height:500, borderRadius:"3rem", boxShadow:"0 32px 80px rgba(0,0,0,.18)", display:"flex", flexDirection:"column", overflow:"hidden" }}>
+        <div className="slide-up glass chat-widget" style={{ width:356, height:500, borderRadius:"3rem", boxShadow:"0 32px 80px rgba(0,0,0,.18)", display:"flex", flexDirection:"column", overflow:"hidden" }}>
           <div style={{ background:"var(--blue-night)", padding:"20px 24px", display:"flex", justifyContent:"space-between", alignItems:"center", color:"white" }}>
             <div style={{ display:"flex", alignItems:"center", gap:12 }}>
               <div style={{ padding:8, background:"var(--blue-ia)", borderRadius:"50%", display:"flex" }}><Bot size={18}/></div>
@@ -253,7 +342,10 @@ const AIAssistant = () => {
 
 /* ─── NAVBAR ────────────────────────────────────────────────────────────── */
 const Navbar = ({ page, go, scrolled }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = (id) => { go(id); setMenuOpen(false); };
   return (
+    <>
     <nav style={{ 
       width:"100%", 
       transition:"all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -271,21 +363,34 @@ const Navbar = ({ page, go, scrolled }) => {
       }) 
     }}>
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-      <div className="logo-wrap" style={{ display:"flex", alignItems:"center", gap:14, cursor:"pointer" }} onClick={()=>go("home")}>
+      <div className="logo-wrap" style={{ display:"flex", alignItems:"center", gap:14, cursor:"pointer" }} onClick={()=>navigate("home")}>
         <Logo size={40}/>
         <div>
           <div style={{ fontFamily:"var(--font-display)", fontSize:18, fontWeight:900, letterSpacing:"-0.02em", color:"var(--blue-ia)", fontStyle:"italic", textTransform:"uppercase", lineHeight:1 }}>SEAD <span style={{ color:"var(--blue-night)", fontWeight:900 }}>CONSEIL</span></div>
           <div style={{ fontFamily:"var(--font-body)", fontSize:7, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)", marginTop:3 }}>IA-BOOSTED • EXPERT-DRIVEN</div>
         </div>
       </div>
-      <div style={{ display:"flex", alignItems:"center", gap:28 }}>
+      <div className="desktop-nav" style={{ display:"flex", alignItems:"center", gap:28 }}>
         {[["expertises","Expertises"],["crea","Direction Créa"],["blog","Blog"],["about","Qui sommes-nous"]].map(([id,label]) => (
           <button key={id} onClick={()=>go(id)} className={`nav-link ${page===id?"active":""}`}>{label}</button>
         ))}
         <button className="btn-audit" onClick={()=>go("audit")}>Lancer l'audit ✨</button>
       </div>
+      <button className={`hamburger ${menuOpen?"open":""}`} onClick={()=>setMenuOpen(!menuOpen)} aria-label="Menu">
+        <span/><span/><span/>
+      </button>
     </div>
     </nav>
+    <div className={`mobile-nav-overlay ${menuOpen?"open":""}`}>
+      <button className="mobile-close-btn" onClick={()=>setMenuOpen(false)} aria-label="Fermer">
+        <X size={28}/>
+      </button>
+      {[["expertises","Expertises"],["crea","Direction Créa"],["blog","Blog"],["about","Qui sommes-nous"]].map(([id,label]) => (
+        <button key={id} onClick={()=>navigate(id)} className={`nav-link ${page===id?"active":""}`}>{label}</button>
+      ))}
+      <button className="btn-audit" onClick={()=>navigate("audit")} style={{ marginTop:12 }}>Lancer l'audit ✨</button>
+    </div>
+    </>
   );
 };
 
@@ -294,7 +399,8 @@ const Home = ({ go }) => {
   const tickers = ["Google Ads","Meta Ads","TikTok Ads","Snapchat Ads","Direction Créa","ROAS","CPA","UGC","Creative Strategy","Performance Max"];
   return (
     <div>
-      <section style={{ position:"relative", paddingTop:90, paddingBottom:160, overflow:"hidden" }}>
+      {/* ── HERO ── */}
+      <section style={{ position:"relative", paddingTop:"clamp(80px,12vw,160px)", paddingBottom:"clamp(64px,10vw,128px)", overflow:"hidden" }}>
         <div className="orb" style={{ top:"-8%", right:"-4%", width:680, height:680, background:"#dbeafe" }}/>
         <div className="orb" style={{ bottom:"15%", left:"-8%", width:380, height:380, background:"#e0f2fe", animationDelay:"4.5s" }}/>
         <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px", position:"relative", zIndex:2 }}>
@@ -302,32 +408,43 @@ const Home = ({ go }) => {
             <Award size={13} style={{ color:"var(--blue-ia)" }}/><span>Expert Formateur Certifié Google Ads</span>
           </div>
           <h1 className="display-title fade-up d1" style={{ 
-            fontSize:"clamp(28px,4.5vw,56px)", 
+            fontSize:"clamp(36px,7vw,96px)", 
             marginBottom:36,
-            maxWidth:"clamp(580px, 55vw, 680px)",
-            lineHeight:1.15
+            maxWidth:900,
+            lineHeight:0.95,
+            letterSpacing:"-0.04em"
           }}>
-            L'IA traite la donnée.<br/><span style={{ color:"var(--blue-ia)" }}>Nous pilotons le profit.</span>
+            L'IA traite la donnée.<br/><span style={{ color:"var(--blue-ia)", fontStyle:"italic" }}>Nous pilotons le profit.</span>
           </h1>
           <p className="fade-up d2" style={{ 
             fontFamily:"var(--font-body)", 
-            fontSize:"clamp(16px,1.8vw,21px)", 
-            color:"var(--blue-night)", 
-            maxWidth:"clamp(580px, 55vw, 680px)",
+            fontSize:"clamp(16px,2vw,24px)", 
+            color:"var(--gray-secondary)", 
+            maxWidth:680,
             marginBottom:56, 
-            lineHeight:1.7, 
-            fontWeight:400
+            lineHeight:1.5, 
+            fontWeight:500
           }}>
-            SEAD CONSEIL transforme l'acquisition complexe en résultats clairs. Nous utilisons l'IA pour la vitesse, mais c'est notre vision métier qui protège votre rentabilité.
+            SEAD CONSEIL transforme l'acquisition complexe en résultats clairs. Nous utilisons l'IA pour la puissance brute, mais c'est notre vision métier qui protège votre rentabilité.
           </p>
-          <div className="fade-up d3" style={{ display:"flex", alignItems:"center", gap:32, flexWrap:"wrap" }}>
-            <button className="btn-primary" onClick={()=>go("audit")}>
-              Audit Stratégique ✨ <ArrowRight size={20} className="arrow"/>
+          <div className="fade-up d3 hero-cta-row" style={{ display:"flex", alignItems:"center", gap:32, flexWrap:"wrap" }}>
+            <button className="btn-primary" onClick={()=>go("audit")} style={{ fontSize:"clamp(14px,1.5vw,20px)", padding:"clamp(16px,2vw,28px) clamp(28px,3vw,56px)" }}>
+              Audit Stratégique Offert <ArrowRight size={20} className="arrow"/>
             </button>
-            <p style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:500, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--gray-secondary)", fontStyle:"italic" }}>Analyse IA instantanée disponible</p>
+            <div className="hero-social-proof" style={{ display:"flex", alignItems:"center", gap:16 }}>
+              <div style={{ display:"flex" }}>
+                {[1,2,3].map(i => <div key={i} style={{ width:40, height:40, borderRadius:"50%", border:"3px solid white", background:"#e2e8f0", marginLeft:i>1?-12:0, boxShadow:"0 4px 12px rgba(0,0,0,.1)" }}/>)}
+              </div>
+              <div>
+                <p style={{ fontFamily:"var(--font-body)", fontSize:11, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.15em", color:"var(--blue-night)" }}>+150 Annonceurs</p>
+                <p style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:600, textTransform:"uppercase", letterSpacing:"0.15em", color:"var(--gray-secondary)" }}>Accompagnés avec succès</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ── TICKER ── */}
       <div style={{ background:"#0f172a", padding:"18px 0", overflow:"hidden", borderTop:"1px solid rgba(255,255,255,.04)", borderBottom:"1px solid rgba(255,255,255,.04)" }}>
         <div className="ticker-wrap">
           <div className="ticker-inner">
@@ -340,247 +457,170 @@ const Home = ({ go }) => {
         </div>
       </div>
 
-      {/* ─── QUI SOMMES-NOUS ───────────────────────────────────────────────────── */}
-      <section style={{ paddingTop:128, paddingBottom:128, background:"var(--bg-white)", position:"relative" }}>
+      {/* ── EXPERTISE / MÉTHODE ── */}
+      <section className="section-padding-lg" style={{ paddingTop:128, paddingBottom:128, background:"var(--bg-soft)", position:"relative" }}>
+        <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
+          <div className="expertise-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:64, alignItems:"center" }}>
+            {/* Left — Card */}
+            <Reveal>
+              <div style={{ background:"var(--bg-white)", padding:"clamp(28px,4vw,64px)", borderRadius:"3rem", boxShadow:"0 24px 80px rgba(0,0,0,.08)", border:"1px solid #f1f5f9", position:"relative" }}>
+                <div style={{ display:"inline-flex", padding:16, background:"var(--blue-ia)", borderRadius:"1.5rem", color:"white", marginBottom:28, boxShadow:"0 12px 32px rgba(59,130,246,.25)" }}>
+                  <Cpu size={36}/>
+                </div>
+                <h2 className="display-title" style={{ fontSize:"clamp(24px,3.5vw,48px)", marginBottom:24, lineHeight:1 }}>
+                  L'IA est une commodité, la stratégie est un <span style={{ color:"var(--blue-ia)" }}>avantage.</span>
+                </h2>
+                <p style={{ fontFamily:"var(--font-body)", fontSize:16, color:"var(--gray-secondary)", lineHeight:1.7, fontWeight:500, fontStyle:"italic", borderLeft:"4px solid var(--blue-ia)", paddingLeft:24, marginBottom:32 }}>
+                  "Confier son budget à un algorithme seul, c'est comme mettre un pilote automatique sans destination. Nous définissons la trajectoire, l'IA accélère le voyage."
+                </p>
+                <div className="stats-row" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+                  <div style={{ padding:20, background:"var(--bg-soft)", borderRadius:"1.5rem" }}>
+                    <span style={{ fontFamily:"var(--font-display)", fontSize:28, fontWeight:900, color:"var(--blue-night)", display:"block", marginBottom:4 }}>+45%</span>
+                    <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.2em", color:"var(--gray-secondary)" }}>CTR Moyen</span>
+                  </div>
+                  <div style={{ padding:20, background:"var(--bg-soft)", borderRadius:"1.5rem" }}>
+                    <span style={{ fontFamily:"var(--font-display)", fontSize:28, fontWeight:900, color:"var(--blue-night)", display:"block", marginBottom:4 }}>-30%</span>
+                    <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.2em", color:"var(--gray-secondary)" }}>CPA Ciblé</span>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Right — 3 étapes */}
+            <div style={{ display:"flex", flexDirection:"column", gap:48 }}>
+              {[
+                { num:"01", title:"Audit Stratégique Humain", desc:"Analyse profonde de votre business modèle. L'IA ne comprend pas votre rentabilité réelle, nous oui. Nous identifions les fuites de budget que les logiciels ignorent.", tag:null },
+                { num:"02", title:"Pilotage Média Multi-Hub", desc:"Google Ads, Meta, TikTok. Une gestion granulaire qui allie le Smart Bidding à une surveillance humaine quotidienne depuis nos 3 centres d'opérations.", tag:"PARIS • DUBLIN • DAKAR" },
+                { num:"03", title:"Direction Créa Publicitaire", desc:"La créa est le nouveau ciblage. Nous concevons vos hooks, vos scripts et vos visuels pour forcer l'attention et déclencher l'action.", tag:null }
+              ].map((step,i) => (
+                <Reveal key={i} delay={i*.1}>
+                  <div>
+                    <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:12, flexWrap:"wrap" }}>
+                      <span style={{ fontFamily:"var(--font-display)", fontSize:"clamp(28px,3vw,40px)", fontWeight:900, color:"var(--blue-ia)", fontStyle:"italic" }}>{step.num}</span>
+                      <h3 style={{ fontFamily:"var(--font-display)", fontSize:"clamp(18px,2vw,26px)", fontWeight:900, textTransform:"uppercase", letterSpacing:"-0.03em", color:"var(--blue-night)" }}>{step.title}</h3>
+                      {step.tag && <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, padding:"5px 12px", background:"#e2e8f0", borderRadius:100, letterSpacing:"0.1em", color:"var(--gray-secondary)" }}>{step.tag}</span>}
+                    </div>
+                    <p style={{ fontFamily:"var(--font-body)", fontSize:15, color:"var(--gray-secondary)", lineHeight:1.7, fontWeight:500 }}>{step.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CREATIVE STRATEGY ── */}
+      <section className="section-padding-lg" style={{ paddingTop:128, paddingBottom:128, background:"var(--bg-white)" }}>
         <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
           <Reveal>
-            <div style={{ textAlign:"center", marginBottom:64 }}>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:11, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)", marginBottom:20, fontStyle:"italic" }}>Qui sommes-nous</p>
-              <h2 className="display-title" style={{ fontSize:"clamp(24px,4vw,48px)", marginBottom:32 }}>
-                L'expertise <span style={{ color:"var(--blue-ia)" }}>"Inside Google"</span><br/>au service de votre croissance.
+            <div style={{ textAlign:"center", maxWidth:800, margin:"0 auto 72px" }}>
+              <p style={{ fontFamily:"var(--font-body)", fontSize:11, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.35em", color:"var(--blue-ia)", marginBottom:20, fontStyle:"italic" }}>Creative Strategy</p>
+              <h2 className="display-title" style={{ fontSize:"clamp(32px,5.5vw,72px)", marginBottom:24, letterSpacing:"-0.04em" }}>
+                L'IA génère des images.<br/><span style={{ color:"var(--blue-ia)" }}>Nous créons du désir.</span>
               </h2>
-            </div>
-          </Reveal>
-
-          <Reveal delay={.1}>
-            <div style={{ maxWidth:880, margin:"0 auto 64px", textAlign:"center" }}>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.6vw,19px)", color:"var(--blue-night)", lineHeight:1.6, fontWeight:400, marginBottom:24 }}>
-                Dans un marché saturé où chaque clic compte, la différence entre une campagne qui survit et une campagne qui explose vos objectifs réside dans la maîtrise des algorithmes.
-              </p>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.6vw,19px)", color:"var(--blue-night)", lineHeight:1.6, fontWeight:400 }}>
-                SEAD CONSEIL n'est pas une agence comme les autres : nous sommes un cabinet de haute performance fondé par un expert qui a formé les meilleurs.
+              <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.5vw,20px)", color:"var(--gray-secondary)", fontWeight:500, lineHeight:1.6 }}>
+                Dans un monde saturé de contenus automatisés, seule une direction de création stratégique et humaine permet de sortir du lot.
               </p>
             </div>
           </Reveal>
 
-          {/* Vision */}
-          <Reveal delay={.15}>
-            <div style={{ background:"var(--bg-soft)", borderRadius:"3rem", padding:"48px 56px", marginBottom:80, border:"1px solid rgba(59,130,246,.1)" }}>
-              <h3 style={{ fontFamily:"var(--font-display)", fontSize:"clamp(24px,3vw,32px)", fontWeight:800, fontStyle:"italic", textTransform:"uppercase", color:"var(--blue-night)", marginBottom:20, letterSpacing:"-0.02em" }}>
-                Notre Vision
-              </h3>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:17, color:"var(--blue-night)", lineHeight:1.6, fontWeight:400 }}>
-                Le marketing digital ne doit plus être une "boîte noire". Chez SEAD CONSEIL, nous prônons une approche où la donnée guide la décision, où la créativité booste la performance et où l'expertise technique n'a aucun secret. Notre mission : apporter aux entreprises de toutes tailles les stratégies et les méthodes utilisées par les plus grands comptes mondiaux.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* Fondateur */}
-          <Reveal delay={.2}>
-            <div className="founder-section" style={{ 
-              background:"linear-gradient(135deg, rgba(248,250,252,0.4) 0%, rgba(255,255,255,0.8) 100%)",
-              borderRadius:"3rem",
-              padding:"64px 56px",
-              marginBottom:80,
-              boxShadow:"0 20px 60px rgba(0,0,0,.06), 0 0 0 1px rgba(59,130,246,.08)",
-              display:"grid",
-              gridTemplateColumns:"1fr 1fr",
-              gap:80,
-              alignItems:"center",
-              position:"relative",
-              overflow:"hidden"
-            }}>
-              {/* Fond décoratif */}
-              <div style={{ position:"absolute", top:"-50%", right:"-20%", width:"600px", height:"600px", background:"radial-gradient(circle, rgba(59,130,246,.05) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}/>
-              
-              <div style={{ position:"relative", zIndex:1 }}>
-                <p style={{ 
-                  fontFamily:"var(--font-body)", 
-                  fontSize:11, 
-                  fontWeight:900, 
-                  textTransform:"uppercase", 
-                  letterSpacing:"0.3em", 
-                  color:"var(--blue-ia)", 
-                  marginBottom:20, 
-                  fontStyle:"italic",
-                  opacity:0.9
-                }}>
-                  Le Fondateur
-                </p>
-                
-                <h3 className="display-title" style={{ 
-                  fontSize:"clamp(42px,5.5vw,64px)", 
-                  marginBottom:32,
-                  lineHeight:1.1,
-                  letterSpacing:"-0.03em"
-                }}>
-                  <span style={{ color:"var(--blue-night)", fontWeight:900 }}>BABA</span> <span style={{ color:"var(--blue-ia)", fontWeight:900 }}>TOURÉ</span>
-                </h3>
-                
-                {/* Badge premium */}
-                <div style={{ 
-                  marginBottom:36, 
-                  padding:"24px 28px", 
-                  background:"linear-gradient(135deg, rgba(59,130,246,.12) 0%, rgba(59,130,246,.08) 100%)",
-                  borderRadius:"3rem", 
-                  border:"1px solid rgba(59,130,246,.2)",
-                  boxShadow:"0 8px 24px rgba(59,130,246,.1)",
-                  backdropFilter:"blur(10px)"
-                }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
-                    <div style={{ 
-                      width:8, 
-                      height:8, 
-                      borderRadius:"50%", 
-                      background:"var(--blue-ia)",
-                      boxShadow:"0 0 12px rgba(59,130,246,.5)"
-                    }}/>
-                    <p style={{ 
-                      fontFamily:"var(--font-body)", 
-                      fontSize:13, 
-                      fontWeight:900, 
-                      textTransform:"uppercase", 
-                      letterSpacing:"0.25em", 
-                      color:"var(--blue-ia)",
-                      margin:0
-                    }}>
-                      Ancien Collaborateur Google
-                    </p>
-                  </div>
-                  <p style={{ 
-                    fontFamily:"var(--font-body)", 
-                    fontSize:14, 
-                    color:"var(--blue-night)", 
-                    lineHeight:1.7, 
-                    fontWeight:500,
-                    margin:0,
-                    paddingLeft:20
-                  }}>
-                    Expert/Formateur chez Google, chargé de former les équipes internes (Ads / Analytics) et les agences partenaires (Google Partners).
-                  </p>
-                </div>
-                
-                <p style={{ 
-                  fontFamily:"var(--font-body)", 
-                  fontSize:16, 
-                  color:"var(--blue-night)", 
-                  lineHeight:1.75, 
-                  fontWeight:400
-                }}>
-                  À l'origine de SEAD CONSEIL, il y a Baba Touré. Son expertise ne s'est pas seulement construite sur le terrain, elle s'est forgée à la source. Aujourd'hui, à travers SEAD CONSEIL, il met ce savoir "initié" directement à votre disposition.
-                </p>
-              </div>
-              
-              {/* Visuel premium */}
-              <div style={{ 
-                background:"linear-gradient(135deg, var(--blue-night) 0%, rgba(15,23,42,.95) 100%)",
-                borderRadius:"3rem", 
-                aspectRatio:"1", 
-                display:"flex", 
-                alignItems:"center", 
-                justifyContent:"center", 
-                position:"relative", 
-                overflow:"hidden", 
-                boxShadow:"0 32px 80px rgba(15,23,42,.4), inset 0 0 0 1px rgba(255,255,255,.1)",
-                border:"1px solid rgba(59,130,246,.2)"
-              }}>
-                <div style={{ 
-                  position:"absolute", 
-                  fontSize:72, 
-                  fontWeight:900, 
-                  color:"rgba(255,255,255,.03)", 
-                  transform:"rotate(-90deg)", 
-                  userSelect:"none", 
-                  whiteSpace:"nowrap", 
-                  fontFamily:"var(--font-display)", 
-                  fontStyle:"italic",
-                  letterSpacing:"0.1em"
-                }}>
-                  BABA TOURE
-                </div>
-                <div style={{ 
-                  animation:"float 6s ease-in-out infinite",
-                  filter:"drop-shadow(0 8px 24px rgba(59,130,246,.3))"
-                }}>
-                  <Logo size={160} pulse={false}/>
-                </div>
-                {/* Effet de brillance */}
-                <div style={{
-                  position:"absolute",
-                  top:"-50%",
-                  left:"-50%",
-                  width:"200%",
-                  height:"200%",
-                  background:"radial-gradient(circle, rgba(59,130,246,.15) 0%, transparent 70%)",
-                  animation:"float 8s ease-in-out infinite",
-                  pointerEvents:"none"
-                }}/>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* Pourquoi choisir */}
-          <Reveal delay={.25}>
-            <div style={{ textAlign:"center", marginBottom:56 }}>
-              <h3 className="display-title" style={{ fontSize:"clamp(32px,4vw,48px)", marginBottom:20 }}>
-                Pourquoi choisir <span style={{ color:"var(--blue-ia)" }}>SEAD CONSEIL</span> ?
-              </h3>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:17, color:"var(--blue-night)", lineHeight:1.6, fontWeight:400, maxWidth:720, margin:"0 auto" }}>
-                Travailler avec nous, c'est bénéficier d'un avantage concurrentiel immédiat grâce à une méthodologie éprouvée chez le leader mondial du Search.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* 4 Expertises */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:24, marginBottom:64 }}>
+          <div className="crea-cards-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:28 }}>
             {[
-              {
-                title:"L'Excellence Google Ads & Social Ads",
-                desc:"Grâce à son passé de formateur chez Google, Baba Touré possède une compréhension granulaire des outils publicitaires. Il maîtrise les subtilités du Machine Learning et des algorithmes de diffusion pour optimiser vos campagnes avec une précision chirurgicale.",
-                icon:Target
-              },
-              {
-                title:"Creative Strategy : L'impact au service du ROI",
-                desc:"Parce qu'il a vu des milliers de comptes publicitaires, Baba sait ce qui fonctionne. SEAD CONSEIL place la stratégie créative au centre : nous concevons des messages et des visuels pensés pour la conversion et l'engagement.",
-                icon:Sparkles
-              },
-              {
-                title:"Analyse des Performances & Data-Informed",
-                desc:"L'héritage de la culture Google se retrouve dans notre obsession pour les chiffres. Chaque décision prise par SEAD CONSEIL est dictée par l'analyse rigoureuse de vos performances digitales pour maximiser votre retour sur investissement.",
-                icon:Search
-              },
-              {
-                title:"Transfert de Compétences et Transparence",
-                desc:"L'ADN de formateur de Baba Touré imprègne chaque mission. Chez SEAD CONSEIL, nous ne nous contentons pas de gérer vos campagnes ; nous vous expliquons le \"pourquoi\" derrière chaque optimisation.",
-                icon:Award
-              }
-            ].map((exp,i) => (
-              <Reveal key={i} delay={.3 + (i * .08)}>
-                <div className="card-hover glass" style={{ padding:40, borderRadius:"3rem", border:"1px solid rgba(241,245,249,.8)", height:"100%" }}>
-                  <div className="exp-icon" style={{ marginBottom:24 }}>
-                    <exp.icon size={32} style={{ color:"var(--blue-ia)" }}/>
-                  </div>
-                  <h4 style={{ fontFamily:"var(--font-display)", fontSize:20, fontWeight:800, fontStyle:"italic", textTransform:"uppercase", marginBottom:16, letterSpacing:"-0.02em", lineHeight:1.1, color:"var(--blue-night)" }}>
-                    {exp.title}
-                  </h4>
-                  <p style={{ fontFamily:"var(--font-body)", color:"var(--blue-night)", lineHeight:1.6, fontWeight:400, fontSize:14 }}>
-                    {exp.desc}
-                  </p>
+              { Icon:Video, title:"UGC & Vidéo Performance", desc:"Scénarisation et production de contenus TikTok & Reels optimisés pour la conversion brute." },
+              { Icon:PenTool, title:"Copywriting Émotionnel", desc:"Des textes qui ne vendent pas un produit, mais une solution à un problème psychologique." },
+              { Icon:PanelsTopLeft, title:"Design d'Assets Statiques", desc:"Bannières et carrousels conçus pour maximiser le CTR sur tous les placements Ads." }
+            ].map((c,i) => (
+              <Reveal key={i} delay={i*.1}>
+                <div className="card-hover" style={{ padding:"clamp(28px,3vw,48px)", background:"var(--bg-soft)", borderRadius:"3rem", border:"1px solid #f1f5f9", height:"100%", transition:"border-color .3s" }}>
+                  <div className="exp-icon" style={{ marginBottom:28, color:"var(--blue-ia)" }}><c.Icon size={30}/></div>
+                  <h4 style={{ fontFamily:"var(--font-display)", fontSize:"clamp(17px,1.5vw,22px)", fontWeight:900, fontStyle:"italic", textTransform:"uppercase", marginBottom:14, letterSpacing:"-0.02em", lineHeight:1.1, color:"var(--blue-night)" }}>{c.title}</h4>
+                  <p style={{ fontFamily:"var(--font-body)", color:"var(--gray-secondary)", lineHeight:1.7, fontWeight:500, fontSize:14 }}>{c.desc}</p>
                 </div>
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* CTA Final */}
-          <Reveal delay={.6}>
-            <div style={{ textAlign:"center", padding:"56px 40px", background:"var(--blue-night)", borderRadius:"3rem", boxShadow:"0 32px 80px rgba(15,23,42,.35)" }}>
-              <p style={{ fontFamily:"var(--font-body)", fontSize:11, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)", marginBottom:16 }}>Bénéficiez d'une stratégie conçue par celui qui forme les experts</p>
-              <h3 className="display-title" style={{ fontSize:"clamp(28px,3.5vw,40px)", marginBottom:32, color:"white" }}>
-                Prêt à transformer vos campagnes ?
-              </h3>
-              <button className="btn-primary" onClick={()=>go("audit")} style={{ background:"var(--blue-ia)", fontSize:16, padding:"24px 48px" }}>
-                Demander un audit de performance ✨ <ArrowRight size={20} className="arrow"/>
-              </button>
+      {/* ── FONDATEUR — SECTION DARK ── */}
+      <section style={{ paddingTop:"clamp(64px,8vw,128px)", paddingBottom:"clamp(64px,8vw,128px)", background:"var(--blue-night)", color:"white", overflow:"hidden", position:"relative" }}>
+        <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px", position:"relative", zIndex:2 }}>
+          <div className="founder-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"clamp(40px,5vw,80px)", alignItems:"center" }}>
+            {/* Photo / Visual */}
+            <Reveal>
+              <div style={{ aspectRatio:"4/5", background:"rgba(255,255,255,.04)", borderRadius:"3rem", border:"1px solid rgba(255,255,255,.1)", overflow:"hidden", position:"relative", boxShadow:"0 32px 80px rgba(0,0,0,.4)" }}>
+                <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <div style={{ animation:"float 6s ease-in-out infinite", filter:"drop-shadow(0 8px 24px rgba(59,130,246,.3))" }}>
+                    <Logo size={160} pulse={false}/>
+                  </div>
+                </div>
+                <div style={{ position:"absolute", bottom:"clamp(16px,3vw,40px)", left:"clamp(16px,3vw,40px)", padding:"clamp(16px,2vw,32px)", background:"var(--blue-ia)", borderRadius:"1.5rem", boxShadow:"0 16px 48px rgba(59,130,246,.4)" }}>
+                  <span style={{ fontFamily:"var(--font-display)", fontSize:"clamp(18px,2.5vw,28px)", fontWeight:900, fontStyle:"italic", textTransform:"uppercase", letterSpacing:"-0.03em", lineHeight:1, display:"block", color:"white" }}>Baba Touré</span>
+                  <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.15em", color:"rgba(255,255,255,.7)", marginTop:6, display:"block" }}>Directeur de Créa & Expert Google Ads</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Text */}
+            <div>
+              <Reveal>
+                <h3 className="display-title" style={{ fontSize:"clamp(28px,4.5vw,56px)", color:"white", marginBottom:32, letterSpacing:"-0.04em" }}>
+                  L'expérience de terrain <br/><span style={{ color:"#60a5fa" }}>bat tous les outils.</span>
+                </h3>
+              </Reveal>
+              <Reveal delay={.1}>
+                <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.5vw,22px)", color:"var(--gray-secondary)", fontWeight:500, lineHeight:1.7, marginBottom:40 }}>
+                  "J'ai formé des centaines de marketeurs et audité des milliers de comptes. Ma conviction ? La technologie doit être au service de la stratégie, et non l'inverse."
+                </p>
+              </Reveal>
+              <Reveal delay={.2}>
+                <div className="founder-stats" style={{ display:"flex", gap:"clamp(24px,4vw,56px)", flexWrap:"wrap", marginBottom:36 }}>
+                  {[
+                    { val:"10+", label:"Années d'expertise" },
+                    { val:"Dublin", label:"Hub Média Europe" },
+                    { val:"Dakar", label:"Hub Créatif" }
+                  ].map((s,i) => (
+                    <div key={i}>
+                      <div style={{ fontFamily:"var(--font-display)", fontSize:"clamp(28px,3.5vw,48px)", fontWeight:900, color:"white", fontStyle:"italic", textTransform:"uppercase", letterSpacing:"-0.04em" }}>{s.val}</div>
+                      <div style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--gray-secondary)", marginTop:6 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+              <Reveal delay={.3}>
+                <a href="#" style={{ display:"inline-flex", alignItems:"center", gap:10, fontFamily:"var(--font-body)", fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.15em", color:"#60a5fa", fontStyle:"italic", textDecoration:"underline", textUnderlineOffset:8 }}>
+                  Suivre mes analyses sur LinkedIn <ArrowRight size={16}/>
+                </a>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ── */}
+      <section style={{ padding:"clamp(48px,6vw,88px) 32px" }}>
+        <div style={{ maxWidth:1100, margin:"0 auto" }}>
+          <Reveal>
+            <div className="final-cta-box" style={{ background:"var(--blue-ia)", borderRadius:"clamp(2rem,4vw,5rem)", padding:"clamp(48px,6vw,128px) clamp(28px,5vw,96px)", textAlign:"center", color:"white", position:"relative", overflow:"hidden", boxShadow:"0 32px 80px rgba(59,130,246,.3)" }}>
+              <div style={{ position:"absolute", top:0, right:0, width:380, height:380, background:"rgba(255,255,255,.1)", borderRadius:"50%", transform:"translate(50%,-50%)", filter:"blur(80px)", pointerEvents:"none" }}/>
+              <div style={{ position:"relative", zIndex:2 }}>
+                <h2 className="display-title" style={{ fontSize:"clamp(32px,5.5vw,72px)", color:"white", marginBottom:24, letterSpacing:"-0.04em" }}>
+                  Prêt à Scaler ?
+                </h2>
+                <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.8vw,24px)", color:"rgba(255,255,255,.8)", fontWeight:500, maxWidth:640, margin:"0 auto 44px", lineHeight:1.6, fontStyle:"italic" }}>
+                  "Ne laissez plus votre budget Ads au hasard. Offrez-vous une vision humaine, augmentée par l'IA."
+                </p>
+                <button className="btn-primary" onClick={()=>go("audit")} style={{ background:"var(--blue-night)", fontSize:"clamp(14px,1.5vw,22px)", padding:"clamp(18px,2.5vw,32px) clamp(28px,3.5vw,64px)", margin:"0 auto" }}>
+                  Lancer mon Audit Offert <ArrowRight size={20} className="arrow"/>
+                </button>
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:24, marginTop:28, fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.3em", opacity:.8 }}>
+                  <span>Paris</span>
+                  <div style={{ width:5, height:5, borderRadius:"50%", background:"white" }}/>
+                  <span>Dublin</span>
+                  <div style={{ width:5, height:5, borderRadius:"50%", background:"white" }}/>
+                  <span>Dakar</span>
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -591,14 +631,14 @@ const Home = ({ go }) => {
 
 /* ─── EXPERTISES ────────────────────────────────────────────────────────── */
 const Expertises = () => (
-  <div style={{ paddingTop:128, paddingBottom:128 }}>
+  <div className="section-padding-lg" style={{ paddingTop:128, paddingBottom:128 }}>
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
       <Reveal>
         <h2 className="display-title" style={{ fontSize:"clamp(39px,8vw,89px)", marginBottom:88 }}>
           Nos <span style={{ color:"var(--blue-ia)" }}>Expertises.</span>
         </h2>
       </Reveal>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24 }}>
+      <div className="expertises-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24 }}>
         {[
           { Icon:Search, title:"Audit & Stratégie", desc:"Diagnostic chirurgical de vos comptes Google et Meta pour identifier les fuites de budget et maximiser le ROAS." },
           { Icon:Target, title:"Pilotage Ads", desc:"Gestion haute performance multi-leviers pilotée par le profit réel, non par les vanity metrics." },
@@ -640,9 +680,9 @@ const DirectionCrea = () => {
   };
 
   return (
-    <div style={{ paddingTop:128, paddingBottom:128 }}>
+    <div className="section-padding-lg" style={{ paddingTop:128, paddingBottom:128 }}>
       <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:88, alignItems:"start" }}>
+        <div className="crea-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:88, alignItems:"start" }}>
           <div>
             <Reveal>
               <h2 className="display-title" style={{ fontSize:"clamp(38px,5vw,78px)", marginBottom:36 }}>
@@ -763,11 +803,11 @@ const Audit = () => {
           </div>
         </div>
 
-        <div className="glass scale-in" style={{ padding:"52px 60px", borderRadius:"3rem", boxShadow:"0 24px 64px rgba(0,0,0,.08)", border:"1px solid rgba(255,255,255,.7)" }}>
+        <div className="glass scale-in audit-card" style={{ padding:"52px 60px", borderRadius:"3rem", boxShadow:"0 24px 64px rgba(0,0,0,.08)", border:"1px solid rgba(255,255,255,.7)" }}>
           {step===1 && (
             <div className="fade-up">
               <h3 style={{ fontFamily:"var(--font-display)", fontSize:27, fontWeight:800, fontStyle:"italic", textTransform:"uppercase", marginBottom:28, letterSpacing:"-0.02em" }}>Maturité de votre projet ?</h3>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div className="maturity-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
                 {["Lancement","Croissance","Consolidation","Redressement"].map(l => (
                   <button key={l} className="maturity-btn" onClick={()=>{ setForm({...form,maturity:l}); setStep(2); }}>
                     <span style={{ fontFamily:"var(--font-display)", fontSize:17, fontWeight:800, textTransform:"uppercase", fontStyle:"italic", letterSpacing:"-0.02em" }}>{l}</span>
@@ -780,7 +820,7 @@ const Audit = () => {
           {step===2 && (
             <div className="fade-up" style={{ display:"flex", flexDirection:"column", gap:18 }}>
               <h3 style={{ fontFamily:"var(--font-display)", fontSize:27, fontWeight:800, fontStyle:"italic", textTransform:"uppercase", textAlign:"center", letterSpacing:"-0.02em" }}>Coordonnées</h3>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              <div className="audit-form-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
                 <input className="field" type="text" placeholder="Société"    value={form.companyName} onChange={e=>setForm({...form,companyName:e.target.value})}/>
                 <input className="field" type="text" placeholder="Prénom Nom" value={form.contactName} onChange={e=>setForm({...form,contactName:e.target.value})}/>
               </div>
@@ -819,9 +859,9 @@ const Audit = () => {
 
 /* ─── ABOUT ─────────────────────────────────────────────────────────────── */
 const AboutUs = () => (
-  <div style={{ paddingTop:128, paddingBottom:128 }}>
+  <div className="section-padding-lg" style={{ paddingTop:128, paddingBottom:128 }}>
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:96, alignItems:"center" }}>
+      <div className="about-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:96, alignItems:"center" }}>
         <div>
           <Reveal><p style={{ fontFamily:"var(--font-body)", fontSize:11, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)", marginBottom:22, fontStyle:"italic" }}>Qui sommes-nous</p></Reveal>
           <Reveal delay={.1}><h2 className="display-title" style={{ fontSize:"clamp(30px,4.5vw,62px)", marginBottom:32 }}>L'autorité par<br/><span style={{ color:"var(--blue-ia)" }}>l'expérience.</span></h2></Reveal>
@@ -860,7 +900,7 @@ const BLOG_ARTICLES = [
 const Blog = ({ go }) => (
   <div>
     {/* ── HERO ── */}
-    <section style={{ position:"relative", paddingTop:220, paddingBottom:128, overflow:"hidden" }}>
+    <section className="section-padding-xl" style={{ position:"relative", paddingTop:220, paddingBottom:128, overflow:"hidden" }}>
       <div className="orb" style={{ top:"-10%", right:"-6%", width:600, height:600, background:"rgba(59,130,246,.08)" }}/>
       <div className="orb" style={{ bottom:"10%", left:"-10%", width:340, height:340, background:"rgba(59,130,246,.06)", animationDelay:"4.5s" }}/>
       <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px", position:"relative", zIndex:2 }}>
@@ -886,8 +926,8 @@ const Blog = ({ go }) => (
     <section style={{ paddingBottom:88 }}>
       <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
         <Reveal>
-          <div className="card-hover" style={{ display:"grid", gridTemplateColumns:"1.1fr 1fr", borderRadius:"3.5rem", overflow:"hidden", border:"1px solid var(--border)", background:"var(--bg-white)", boxShadow:"0 8px 40px rgba(0,0,0,.06)", cursor:"pointer" }}>
-            <div style={{ background:BLOG_ARTICLES[0].gradient, position:"relative", overflow:"hidden", minHeight:380 }}>
+          <div className="card-hover blog-featured" style={{ display:"grid", gridTemplateColumns:"1.1fr 1fr", borderRadius:"3.5rem", overflow:"hidden", border:"1px solid var(--border)", background:"var(--bg-white)", boxShadow:"0 8px 40px rgba(0,0,0,.06)", cursor:"pointer" }}>
+            <div className="blog-featured-visual" style={{ background:BLOG_ARTICLES[0].gradient, position:"relative", overflow:"hidden", minHeight:380 }}>
               <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", justifyContent:"flex-end", padding:48 }}>
                 <div style={{ fontFamily:"var(--font-display)", fontSize:120, fontWeight:900, color:"rgba(255,255,255,.07)", position:"absolute", top:28, right:36, lineHeight:1, fontStyle:"italic" }}>01</div>
                 <Logo size={52} pulse={false}/>
@@ -918,7 +958,7 @@ const Blog = ({ go }) => (
             <div style={{ height:1, flex:1, background:"var(--border)", marginLeft:32 }}/>
           </div>
         </Reveal>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:28 }}>
+        <div className="blog-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:28 }}>
           {BLOG_ARTICLES.slice(1).map((article,i) => (
             <Reveal key={article.id} delay={i*.1}>
               <article className="card-hover glass" style={{ borderRadius:"3rem", border:"1px solid rgba(241,245,249,.8)", overflow:"hidden", cursor:"pointer", height:"100%", display:"flex", flexDirection:"column" }}>
@@ -954,7 +994,7 @@ const Blog = ({ go }) => (
     <section style={{ paddingBottom:128 }}>
       <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
         <Reveal>
-          <div style={{ background:"var(--blue-night)", borderRadius:"4rem", padding:"88px 72px", textAlign:"center", position:"relative", overflow:"hidden", boxShadow:"0 32px 80px rgba(15,23,42,.35)" }}>
+          <div className="blog-cta-box" style={{ background:"var(--blue-night)", borderRadius:"4rem", padding:"88px 72px", textAlign:"center", position:"relative", overflow:"hidden", boxShadow:"0 32px 80px rgba(15,23,42,.35)" }}>
             <div className="orb" style={{ top:"-30%", right:"-10%", width:400, height:400, background:"#1e3a8a", opacity:.3 }}/>
             <div className="orb" style={{ bottom:"-20%", left:"-8%", width:300, height:300, background:"#1e40af", opacity:.25, animationDelay:"3s" }}/>
             <div style={{ position:"relative", zIndex:2 }}>
@@ -980,7 +1020,7 @@ const Blog = ({ go }) => (
 const Footer = ({ go }) => (
   <footer style={{ paddingTop:88, paddingBottom:44, background:"rgba(255,255,255,.9)", backdropFilter:"blur(16px)", borderTop:"1px solid #f1f5f9" }}>
     <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
-      <div style={{ display:"grid", gridTemplateColumns:"5fr 2fr 2fr 2fr", gap:48, marginBottom:56 }}>
+      <div className="footer-grid" style={{ display:"grid", gridTemplateColumns:"5fr 2fr 2fr 2fr", gap:48, marginBottom:56 }}>
         <div>
           <div className="logo-wrap" style={{ display:"flex", alignItems:"center", gap:14, marginBottom:22, cursor:"pointer" }} onClick={()=>go("home")}>
             <Logo size={42} pulse={false}/>
@@ -1044,14 +1084,14 @@ export default function App() {
       <div style={{ minHeight:"100vh", background:"white", overflowX:"hidden" }}>
         {/* Top bar */}
         <div style={{ background:"rgba(15,23,42,.97)", backdropFilter:"blur(16px)", color:"var(--gray-secondary)", padding:"11px 32px", fontFamily:"var(--font-body)", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, zIndex:60, borderBottom:"1px solid rgba(255,255,255,.04)" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:26 }}>
+          <div className="top-bar-locations" style={{ display:"flex", alignItems:"center", gap:26 }}>
             {[["PARIS (QG)",true],["DUBLIN",false],["DAKAR",false]].map(([c,a]) => (
               <span key={c} style={{ display:"flex", alignItems:"center", gap:7, color:a?"white":"inherit", transition:"color .2s" }}>
                 <MapPin size={10} style={{ color:a?"var(--blue-ia)":"var(--gray-secondary)", fill:a?"rgba(59,130,246,.18)":"none" }}/>{c}
               </span>
             ))}
           </div>
-          <div style={{ display:"flex", alignItems:"center", gap:8, fontStyle:"italic" }}>
+          <div className="top-bar-tagline" style={{ display:"flex", alignItems:"center", gap:8, fontStyle:"italic" }}>
             <Globe size={10} style={{ color:"var(--blue-ia)", animation:"pulse 2s infinite" }}/> IA-BOOSTED • EXPERT-DRIVEN
           </div>
         </div>
