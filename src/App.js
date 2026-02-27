@@ -279,7 +279,7 @@ const Navbar = ({ page, go, scrolled }) => {
         </div>
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:28 }}>
-        {[["expertises","Expertises"],["crea","Direction Créa"],["about","Qui sommes-nous"]].map(([id,label]) => (
+        {[["expertises","Expertises"],["crea","Direction Créa"],["blog","Blog"],["about","Qui sommes-nous"]].map(([id,label]) => (
           <button key={id} onClick={()=>go(id)} className={`nav-link ${page===id?"active":""}`}>{label}</button>
         ))}
         <button className="btn-audit" onClick={()=>go("audit")}>Lancer l'audit ✨</button>
@@ -847,6 +847,135 @@ const AboutUs = () => (
   </div>
 );
 
+/* ─── BLOG ─────────────────────────────────────────────────────────────── */
+const BLOG_ARTICLES = [
+  { id:1, title:"Performance Max : le guide ultime pour scaler sans perdre en ROAS", excerpt:"Comment structurer vos campagnes PMax pour maximiser le profit réel tout en gardant le contrôle sur l'algorithme Google.", category:"Google Ads", date:"12 Fév 2026", readTime:"8 min", color:"var(--blue-ia)", gradient:"linear-gradient(135deg,#1e3a8a 0%,#3B82F6 50%,#60a5fa 100%)" },
+  { id:2, title:"UGC Ads : pourquoi vos créas statiques ne convertissent plus", excerpt:"L'ère du scroll rapide exige des formats natifs. Décryptage des mécaniques psychologiques derrière les meilleures UGC ads.", category:"Creative Strategy", date:"5 Fév 2026", readTime:"6 min", color:"#7c3aed", gradient:"linear-gradient(135deg,#4c1d95 0%,#7c3aed 50%,#a78bfa 100%)" },
+  { id:3, title:"IA × Acquisition : comment nous utilisons Claude pour auditer en 30 secondes", excerpt:"Notre méthodologie propriétaire combine l'analyse IA instantanée avec 12 ans d'expertise terrain pour des diagnostics chirurgicaux.", category:"IA & Automation", date:"28 Jan 2026", readTime:"5 min", color:"#0891b2", gradient:"linear-gradient(135deg,#164e63 0%,#0891b2 50%,#67e8f9 100%)" },
+  { id:4, title:"Meta Ads 2026 : les 5 signaux faibles à surveiller ce trimestre", excerpt:"Advantage+ Shopping, Reels Ads, API Conversions étendue… Les changements silencieux qui vont redéfinir vos performances.", category:"Meta Ads", date:"20 Jan 2026", readTime:"7 min", color:"var(--blue-ia)", gradient:"linear-gradient(135deg,#0F172A 0%,#1e40af 50%,#3B82F6 100%)" },
+  { id:5, title:"Budget Ads : la méthode SEAD pour allouer sans gaspiller", excerpt:"Notre framework de répartition budgétaire basé sur le MER et le profit incrémental, testé sur +2M€ de spend mensuel.", category:"Stratégie", date:"14 Jan 2026", readTime:"9 min", color:"#059669", gradient:"linear-gradient(135deg,#064e3b 0%,#059669 50%,#6ee7b7 100%)" },
+  { id:6, title:"TikTok Ads : de 0 à 100k€/mois en 90 jours — étude de cas", excerpt:"Comment nous avons accompagné une DNVB française dans son scale TikTok avec un ROAS moyen de 4.2x sur la période.", category:"Case Study", date:"6 Jan 2026", readTime:"10 min", color:"#e11d48", gradient:"linear-gradient(135deg,#881337 0%,#e11d48 50%,#fda4af 100%)" },
+];
+
+const Blog = ({ go }) => (
+  <div>
+    {/* ── HERO ── */}
+    <section style={{ position:"relative", paddingTop:220, paddingBottom:128, overflow:"hidden" }}>
+      <div className="orb" style={{ top:"-10%", right:"-6%", width:600, height:600, background:"rgba(59,130,246,.08)" }}/>
+      <div className="orb" style={{ bottom:"10%", left:"-10%", width:340, height:340, background:"rgba(59,130,246,.06)", animationDelay:"4.5s" }}/>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px", position:"relative", zIndex:2 }}>
+        <Reveal>
+          <div className="badge" style={{ marginBottom:40 }}>
+            <Sparkles size={13} style={{ color:"#60a5fa" }}/><span>Insights & Stratégies</span>
+          </div>
+        </Reveal>
+        <Reveal delay={.08}>
+          <h1 className="display-title" style={{ fontSize:"clamp(46px,8vw,96px)", marginBottom:32 }}>
+            Le <span style={{ color:"var(--blue-ia)" }}>Blog.</span>
+          </h1>
+        </Reveal>
+        <Reveal delay={.18}>
+          <p style={{ fontFamily:"var(--font-body)", fontSize:"clamp(16px,1.8vw,21px)", color:"var(--gray-secondary)", maxWidth:620, lineHeight:1.6, fontWeight:400 }}>
+            Veille stratégique, frameworks actionnables et retours d'expérience terrain — par l'équipe SEAD CONSEIL.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+
+    {/* ── FEATURED ARTICLE ── */}
+    <section style={{ paddingBottom:88 }}>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
+        <Reveal>
+          <div className="card-hover" style={{ display:"grid", gridTemplateColumns:"1.1fr 1fr", borderRadius:"3.5rem", overflow:"hidden", border:"1px solid var(--border)", background:"var(--bg-white)", boxShadow:"0 8px 40px rgba(0,0,0,.06)", cursor:"pointer" }}>
+            <div style={{ background:BLOG_ARTICLES[0].gradient, position:"relative", overflow:"hidden", minHeight:380 }}>
+              <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", justifyContent:"flex-end", padding:48 }}>
+                <div style={{ fontFamily:"var(--font-display)", fontSize:120, fontWeight:900, color:"rgba(255,255,255,.07)", position:"absolute", top:28, right:36, lineHeight:1, fontStyle:"italic" }}>01</div>
+                <Logo size={52} pulse={false}/>
+              </div>
+            </div>
+            <div style={{ padding:"52px 48px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:20 }}>
+                <span style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)", background:"rgba(59,130,246,.08)", padding:"6px 14px", borderRadius:100 }}>{BLOG_ARTICLES[0].category}</span>
+                <span style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:500, textTransform:"uppercase", letterSpacing:"0.2em", color:"var(--gray-secondary)" }}>{BLOG_ARTICLES[0].date}</span>
+              </div>
+              <h2 style={{ fontFamily:"var(--font-display)", fontSize:26, fontWeight:900, fontStyle:"italic", textTransform:"uppercase", letterSpacing:"-0.02em", lineHeight:1.1, marginBottom:18, color:"var(--blue-night)" }}>{BLOG_ARTICLES[0].title}</h2>
+              <p style={{ fontFamily:"var(--font-body)", color:"var(--gray-secondary)", lineHeight:1.7, fontWeight:400, fontSize:14, marginBottom:28 }}>{BLOG_ARTICLES[0].excerpt}</p>
+              <div style={{ display:"flex", alignItems:"center", gap:10, fontFamily:"var(--font-body)", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.25em", color:"var(--blue-ia)" }}>
+                Lire l'article <ArrowRight size={14}/>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+
+    {/* ── ARTICLES GRID ── */}
+    <section style={{ paddingTop:44, paddingBottom:128 }}>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
+        <Reveal>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:56 }}>
+            <p style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.3em", color:"var(--blue-ia)", fontStyle:"italic" }}>Dernières publications</p>
+            <div style={{ height:1, flex:1, background:"var(--border)", marginLeft:32 }}/>
+          </div>
+        </Reveal>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:28 }}>
+          {BLOG_ARTICLES.slice(1).map((article,i) => (
+            <Reveal key={article.id} delay={i*.1}>
+              <article className="card-hover glass" style={{ borderRadius:"3rem", border:"1px solid rgba(241,245,249,.8)", overflow:"hidden", cursor:"pointer", height:"100%", display:"flex", flexDirection:"column" }}>
+                <div style={{ position:"relative", overflow:"hidden" }}>
+                  <div style={{ aspectRatio:"16/9", background:article.gradient, transition:"transform .5s cubic-bezier(.16,1,.3,1)", position:"relative" }}
+                    onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.05)";}}
+                    onMouseLeave={e=>{e.currentTarget.style.transform="scale(1)";}}>
+                    <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                      <div style={{ fontFamily:"var(--font-display)", fontSize:72, fontWeight:900, color:"rgba(255,255,255,.08)", fontStyle:"italic", lineHeight:1 }}>{String(i+2).padStart(2,"0")}</div>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ padding:"32px 32px 36px", flex:1, display:"flex", flexDirection:"column" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
+                    <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.2em", color:article.color, background:"rgba(59,130,246,.06)", padding:"5px 12px", borderRadius:100 }}>{article.category}</span>
+                    <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:500, textTransform:"uppercase", letterSpacing:"0.2em", color:"var(--gray-secondary)" }}>{article.readTime}</span>
+                  </div>
+                  <h3 style={{ fontFamily:"var(--font-display)", fontSize:17, fontWeight:900, fontStyle:"italic", textTransform:"uppercase", letterSpacing:"-0.01em", lineHeight:1.15, marginBottom:12, color:"var(--blue-night)", flex:1 }}>{article.title}</h3>
+                  <p style={{ fontFamily:"var(--font-body)", color:"var(--gray-secondary)", lineHeight:1.7, fontWeight:400, fontSize:13, marginBottom:20 }}>{article.excerpt}</p>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", paddingTop:16, borderTop:"1px solid var(--border)" }}>
+                    <span style={{ fontFamily:"var(--font-body)", fontSize:9, fontWeight:500, textTransform:"uppercase", letterSpacing:"0.2em", color:"var(--gray-secondary)" }}>{article.date}</span>
+                    <ArrowRight size={14} style={{ color:"var(--blue-ia)", transition:"transform .3s cubic-bezier(.16,1,.3,1)" }}/>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ── CTA ── */}
+    <section style={{ paddingBottom:128 }}>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"0 32px" }}>
+        <Reveal>
+          <div style={{ background:"var(--blue-night)", borderRadius:"4rem", padding:"88px 72px", textAlign:"center", position:"relative", overflow:"hidden", boxShadow:"0 32px 80px rgba(15,23,42,.35)" }}>
+            <div className="orb" style={{ top:"-30%", right:"-10%", width:400, height:400, background:"#1e3a8a", opacity:.3 }}/>
+            <div className="orb" style={{ bottom:"-20%", left:"-8%", width:300, height:300, background:"#1e40af", opacity:.25, animationDelay:"3s" }}/>
+            <div style={{ position:"relative", zIndex:2 }}>
+              <p style={{ fontFamily:"var(--font-body)", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.3em", color:"#60a5fa", marginBottom:28, fontStyle:"italic" }}>Passez à l'action</p>
+              <h2 className="display-title" style={{ fontSize:"clamp(32px,5vw,64px)", color:"white", marginBottom:24 }}>
+                Vos concurrents lisent.<br/><span style={{ color:"#60a5fa" }}>Vous, agissez.</span>
+              </h2>
+              <p style={{ fontFamily:"var(--font-body)", fontSize:16, color:"var(--gray-secondary)", fontWeight:400, maxWidth:480, margin:"0 auto 44px", lineHeight:1.65 }}>
+                Recevez un diagnostic complet de vos campagnes avec recommandations IA en moins de 48h.
+              </p>
+              <button className="btn-primary" onClick={()=>go("audit")} style={{ margin:"0 auto" }}>
+                Lancer mon Audit Gratuit ✨ <ArrowRight size={20} className="arrow"/>
+              </button>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  </div>
+);
+
 /* ─── FOOTER ────────────────────────────────────────────────────────────── */
 const Footer = ({ go }) => (
   <footer style={{ paddingTop:88, paddingBottom:44, background:"rgba(255,255,255,.9)", backdropFilter:"blur(16px)", borderTop:"1px solid #f1f5f9" }}>
@@ -866,7 +995,7 @@ const Footer = ({ go }) => (
         </div>
         {[
           { title:"Implantations", items:["Paris (QG)","Dublin (Hub)","Dakar (Hub)"], pages:null },
-          { title:"Plan", items:["Expertises","Direction Créa","Audit"], pages:["expertises","crea","audit"] },
+          { title:"Plan", items:["Expertises","Direction Créa","Blog","Audit"], pages:["expertises","crea","blog","audit"] },
           { title:"Contact", items:["hello@seadconseil.fr","@babatoure"], pages:null }
         ].map((col,i) => (
           <div key={i} style={{ display:"flex", flexDirection:"column", gap:14 }}>
@@ -906,7 +1035,7 @@ export default function App() {
   }, []);
 
   const go = id => { setPage(id); window.scrollTo({ top:0, behavior:"smooth" }); };
-  const pages = { home:Home, expertises:Expertises, crea:DirectionCrea, about:AboutUs, audit:Audit };
+  const pages = { home:Home, expertises:Expertises, crea:DirectionCrea, about:AboutUs, audit:Audit, blog:Blog };
   const Page = pages[page] || Home;
 
   return (
