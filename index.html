@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KAYOR — Brillez sans effort</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     ÉCRAN DE CONNEXION
+     ============================================================ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div style="text-align:center;margin-bottom:8px"><img src="assets/logo-kayor.jpg" alt="KAYOR" style="max-width:180px;max-height:100px;object-fit:contain" /></div>
+    <div class="login-tagline">Brillez sans effort</div>
+    <div class="form-group" style="margin-top:24px">
+      <label class="form-label">Identifiant</label>
+      <input class="form-input" type="text" id="login-user" placeholder="admin / stock / vendeur" autocomplete="username" />
+    </div>
+    <div class="form-group" style="margin:12px 0 20px">
+      <label class="form-label">Mot de passe</label>
+      <input class="form-input" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">Se connecter</button>
+    <div class="login-hint">
+      <span>admin / admin123</span><span>stock / stock123</span><span>vendeur / vendeur123</span>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <button onclick="resetAppData()" style="background:none;border:none;font-size:11px;color:var(--text-tertiary);cursor:pointer;text-decoration:underline">
+        Problème de connexion ? Réinitialiser les données
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APPLICATION PRINCIPALE
+     ============================================================ -->
+<div id="main-app" style="display:none">
+
+<!-- TOPBAR MOBILE -->
+<div class="topbar">
+  <div class="topbar-logo"><span style="font-weight:700;font-size:16px;letter-spacing:1px;color:#C9A84C">KAYOR</span></div>
+  <div class="topbar-right"><span class="topbar-user-badge" id="topbar-role-badge"></span><button class="btn-logout-top" onclick="refreshAll()" title="Actualiser les données" style="margin-right:4px;font-size:16px">⟳</button><button class="btn-logout-top" onclick="doLogout()" title="Déconnexion">⏻</button><button class="btn-menu" onclick="toggleDrawer()" aria-label="Menu">☰</button></div>
+</div>
+
+<!-- OVERLAY DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/logo-kayor.jpg" alt="KAYOR" style="max-width:120px;display:block;margin:0 auto" />
+      <div class="brand-tagline">Brillez sans effort</div>
+      <div class="logo-sub">Système de gestion</div>
+    </div>
+
+    <nav class="nav" id="main-nav">
+      <div class="nav-section-label">Principal</div>
+      <button class="nav-item active" data-section="dashboard" data-perm="all">
+        <span class="nav-icon">◈</span> Tableau de bord
+      </button>
+      <button class="nav-item" data-section="journal" data-perm="journal">
+        <span class="nav-icon">◉</span> Journal des ventes
+      </button>
+
+      <div class="nav-section-label" style="margin-top:8px">Stock</div>
+      <button class="nav-item" data-section="stocks" data-perm="stocks">
+        <span class="nav-icon">◻</span> Stocks &amp; Inventaire
+      </button>
+      <button class="nav-item" data-section="achats_clients" data-perm="achats">
+        <span class="nav-icon">⊘</span> Reprises
+      </button>
+      <button class="nav-item" data-section="sorties" data-perm="sorties">
+        <span class="nav-icon">⊖</span> Sorties de stock
+      </button>
+
+      <div class="nav-section-label" style="margin-top:8px">Finance</div>
+      <button class="nav-item" data-section="decaissements" data-perm="decaissements">
+        <span class="nav-icon">◐</span> Décaissements
+      </button>
+
+      <div class="nav-section-label" style="margin-top:8px">Clients</div>
+      <button class="nav-item" data-section="clients" data-perm="clients">
+        <span class="nav-icon">◎</span> Clients &amp; Fidélité
+      </button>
+      <button class="nav-item" data-section="compte_client" data-perm="compte_client">
+        <span class="nav-icon">◑</span> Comptes clients
+      </button>
+      <button class="nav-item" data-section="bijou_arr" data-perm="bijou_arr">
+        <span class="nav-icon">◆</span> Arrhes & Commandes
+      </button>
+          <div class="nav-section-label" style="margin-top:8px">Sécurité</div>
+      <button class="nav-item" data-section="historique" data-perm="historique"><span class="nav-icon">◷</span> Historique connexions</button>
+      <button class="nav-item" data-section="comptes_users" data-perm="historique"><span class="nav-icon">⊛</span> Gestion comptes</button>
+      <button class="nav-item" data-section="rapport_jour" data-perm="all"><span class="nav-icon">◈</span> Rapport journalier</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">MB</div>
+        <div>
+          <div class="user-name" id="user-name">—</div>
+          <div class="user-role-badge" id="user-role-badge">—</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="refreshAll()" title="Actualiser" style="margin-right:4px">⟳</button><button class="btn-logout" onclick="doLogout()" title="Déconnexion">⏻</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="section active" id="dashboard">
+      <div class="page-header">
+        <div><h1 class="page-title">Tableau de bord</h1><p class="page-sub" id="dashboard-date"></p></div>
+        <button class="btn btn-secondary" onclick="exporterRapport()">⬇ Rapport</button>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-label">CA du mois</div><div class="metric-value" id="metric-ca">—</div><span class="metric-badge badge-info" id="metric-ca-nb">—</span></div>
+        <div class="metric-card"><div class="metric-label">Restants dus</div><div class="metric-value" id="metric-restants">—</div><span class="metric-badge badge-warn" id="metric-nb-restants">—</span></div>
+        <div class="metric-card"><div class="metric-label">💰 Solde net caisse</div><div class="metric-value" id="metric-decaiss">—</div><span class="metric-badge badge-info" id="metric-nb-decaiss">—</span></div>
+        <div class="metric-card"><div class="metric-label">Arrhes &amp; Commandes</div><div class="metric-value" id="metric-arrhes">—</div><span class="metric-badge badge-warn" id="metric-nb-arrhes">—</span></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Ventes — 7 derniers jours</span></div>
+          <div class="card-body"><div class="sparkline" id="sparkline"></div><div class="spark-labels" id="spark-labels"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Répartition par carat</span></div>
+          <div class="card-body"><div class="bar-chart" id="bar-carats"></div></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Soldes comptes clients épargne</span></div>
+          <div class="card-body"><div id="dash-comptes"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Alertes &amp; rappels</span></div>
+          <div class="card-body" style="padding:0"><div id="dash-alertes"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOURNAL DES VENTES -->
+    <section class="section" id="journal">
+      <div class="page-header">
+        <div><h1 class="page-title">Journal des ventes</h1><p class="page-sub" id="journal-count-label"></p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="exporterJournalCSV()">⬇ CSV</button>
+          <button class="btn btn-primary" onclick="openModal('modal-nouvelle-vente')">+ Nouvelle vente</button>
+        </div>
+      </div>
+      <div class="filters-bar">
+        <input class="form-input" style="flex:1;min-width:160px" type="text" placeholder="Client, description..." id="journal-search" />
+        <select class="form-input filter-select" id="filtre-carat" onchange="renderJournal()"><option value="">Tous les carats</option></select>
+        <select class="form-input filter-select" id="filtre-type">
+          <option value="">Tout type</option><option value="local">Local</option><option value="importe">Importé</option>
+        </select>
+        <select class="form-input filter-select" id="filtre-restant">
+          <option value="">Tous statuts</option><option value="solde">Soldé</option><option value="en-cours">Restant dû</option>
+        </select>
+      </div>
+      <div class="cumul-bar">
+        <span class="cumul-label">Total ventes :</span><span class="cumul-value" id="montant-cumul">—</span>
+        <span class="cumul-sep">|</span>
+        <span class="cumul-label">💰 Solde net caisse :</span><span class="cumul-value" id="montant-encaisse">—</span>
+        <span class="cumul-sep">|</span>
+        <span class="cumul-label">⏳ Restants :</span><span class="cumul-warn" id="total-restants">—</span>
+        <span class="cumul-sep">|</span>
+        <span class="cumul-label">Local :</span><span class="cumul-value" id="poids-local-total">—</span>
+        <span class="cumul-label" style="margin-left:8px">Importé :</span><span class="cumul-value" id="poids-importe-total">—</span>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table class="journal-table">
+          <thead>
+            <tr>
+              <th>Date</th><th>Client</th><th>Description</th>
+              <th>Local (g)</th><th>Importé (g)</th><th>Carat</th>
+              <th>Montant</th><th>Paiement</th><th>Restant</th><th>Modifier</th><th>Facture</th>
+            </tr>
+          </thead>
+          <tbody id="journal-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- STOCKS -->
+    <section class="section" id="stocks">
+      <div class="page-header">
+        <div><h1 class="page-title">Stocks &amp; Inventaire</h1><p class="page-sub" id="stock-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-produit')">+ Ajouter un article</button>
+      </div>
+      <input class="search-bar" type="text" placeholder="Reference, nom, carat..." id="stock-search" />
+      <div class="two-col" style="margin-bottom:16px">
+        <div class="card"><div class="card-header"><span class="card-title">Poids par carat</span></div><div class="card-body" id="stock-recap-carats"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">Poids par type</span></div><div class="card-body" id="stock-recap-types"></div></div>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Réf</th><th>Désignation</th><th>Carat</th><th>Type</th><th>Poids total (g)</th><th>Nb articles</th><th>Prix unit.</th><th>Valeur stock</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="stock-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+
+    <!-- ACHATS DEPUIS CLIENTS -->
+    <section class="section" id="achats_clients">
+      <div class="page-header">
+        <div><h1 class="page-title">Reprises de bijoux</h1><p class="page-sub" id="ac-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-achat-client')">+ Nouvelle reprise</button>
+      </div>
+      <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="metric-card"><div class="metric-label">Total reprises (mois)</div><div class="metric-value" id="metric-ac-mois">—</div></div>
+        <div class="metric-card"><div class="metric-label">Total reprises (tout)</div><div class="metric-value" id="metric-ac-total">—</div></div>
+        <div class="metric-card"><div class="metric-label">Poids total repris</div><div class="metric-value" id="metric-ac-poids">—</div></div>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Client</th><th>Description</th><th>Photo</th><th>Carat</th><th>Poids (g)</th><th>Prix reprise</th><th>Saisi par</th><th>Actions</th></tr></thead>
+          <tbody id="achats-clients-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- SORTIES DE STOCK -->
+    <section class="section" id="sorties">
+      <div class="page-header">
+        <div><h1 class="page-title">Sorties de stock</h1><p class="page-sub" id="sorties-count-label"></p></div>
+        <button class="btn btn-primary" id="btn-add-sortie" onclick="openModal('modal-add-sortie')">+ Nouvelle sortie</button>
+      </div>
+      <div class="alert-box" id="sorties-perm-warning" style="display:none">
+        <span>🔒</span> Seul l'administrateur peut enregistrer des sorties de stock.
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Type de bijou</th><th>Carat</th><th>Poids sorti (g)</th><th>Motif</th><th>Valide par</th></tr></thead>
+          <tbody id="sorties-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- DÉCAISSEMENTS -->
+    <section class="section" id="decaissements">
+      <div class="page-header">
+        <div><h1 class="page-title">Décaissements</h1><p class="page-sub" id="decaiss-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-decaiss')">+ Nouveau décaissement</button>
+      </div>
+      <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="metric-card"><div class="metric-label">Total décaissé (mois)</div><div class="metric-value" id="metric-decaiss-mois">—</div></div>
+        <div class="metric-card"><div class="metric-label">Total décaissé (tout)</div><div class="metric-value" id="metric-decaiss-all">—</div></div>
+        <div class="metric-card"><div class="metric-label">Solde net (encaissé − décaissé)</div><div class="metric-value" id="metric-solde-net">—</div><span class="metric-badge badge-info" id="metric-solde-net-sub">—</span></div>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Catégorie</th><th>Description</th><th>Montant</th><th>Saisi par</th><th>Actions</th></tr></thead>
+          <tbody id="decaiss-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section class="section" id="clients">
+      <div class="page-header">
+        <div><h1 class="page-title">Clients &amp; Fidélité</h1><p class="page-sub" id="clients-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-client')">+ Nouveau client</button>
+      </div>
+      <input class="search-bar" type="text" placeholder="Rechercher un client..." id="client-search" />
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Téléphone</th><th>Total achats</th><th>Restant dû</th><th>Nb ventes</th><th>Niveau</th><th>Dernière visite</th><th>Portail</th></tr></thead>
+          <tbody id="clients-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- COMPTES CLIENTS -->
+    <section class="section" id="compte_client">
+      <div class="page-header">
+        <div><h1 class="page-title">Comptes clients — Épargne bijoux</h1><p class="page-sub" id="cc-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-compte-client')">+ Nouveau compte</button>
+      </div>
+      <input class="search-bar" type="text" placeholder="Rechercher un compte client..." id="cc-search" />
+      <div id="cc-list"></div>
+    </section>
+
+    <!-- ARRHES & COMMANDES -->
+    <section class="section" id="bijou_arr">
+      <div class="page-header">
+        <div><h1 class="page-title">Arrhes &amp; Commandes</h1><p class="page-sub" id="ba-count-label"></p></div>
+      </div>
+      <!-- Filtres -->
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <input class="search-bar" type="text" placeholder="Rechercher un client..." id="arr-search" style="flex:1;min-width:180px" />
+        <select class="form-input" id="arr-filtre" style="width:auto;min-width:150px">
+          <option value="tous">Tous</option>
+          <option value="en_cours" selected>En cours</option>
+          <option value="solde">Soldés ce mois</option>
+        </select>
+      </div>
+      <div class="card" id="ba-list"></div>
+    </section>
+
+    <!-- RAPPORT JOURNALIER -->
+    <section class="section" id="rapport_journalier">
+      <div class="page-header">
+        <div><h1 class="page-title">Rapport journalier</h1><p class="page-sub" id="rapport-date-label"></p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="date" class="form-input" id="rapport-date" style="width:auto" onchange="renderRapportJournalier()"/>
+          <button class="btn btn-primary" onclick="imprimerRapportJournalier()">&#x1F5A8; Imprimer / PDF</button>
+        </div>
+      </div>
+      <div id="rapport-journalier-content"></div>
+    </section>
+
+    <!-- GESTION COMPTES UTILISATEURS -->
+    <section class="section" id="gestion_comptes">
+      <div class="page-header">
+        <div><h1 class="page-title">Gestion des comptes</h1><p class="page-sub" id="gc-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-user')">+ Nouveau compte</button>
+      </div>
+      <div class="card" style="overflow-x:auto">
+        <table><thead><tr><th>Nom</th><th>Identifiant</th><th>Role</th><th>Statut</th><th>Date creation</th><th>Actions</th></tr></thead>
+        <tbody id="users-body"></tbody></table>
+      </div>
+    </section>
+
+
+    <!-- GESTION COMPTES UTILISATEURS -->
+    <section class="section" id="comptes_users">
+      <div class="page-header">
+        <div><h1 class="page-title">Gestion des comptes</h1><p class="page-sub" id="users-count-label"></p></div>
+        <button class="btn btn-primary" onclick="openModal('modal-add-user')">+ Nouveau compte</button>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Utilisateur</th><th>Login</th><th>Rôle</th><th>Statut</th><th>Dernière connexion</th><th>Actions</th></tr></thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- RAPPORT JOURNALIER -->
+    <section class="section" id="rapport_jour">
+      <div class="page-header">
+        <div><h1 class="page-title">Rapport journalier</h1><p class="page-sub" id="rapport-date-label"></p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="date" class="form-input" id="rapport-date-picker" style="width:auto" onchange="renderRapportJour()" />
+          <button class="btn btn-primary" onclick="imprimerRapportJournalier()">🖨 Exporter PDF</button>
+        </div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-label">Ventes du jour</div><div class="metric-value" id="rj-ventes">—</div><span class="metric-badge badge-success" id="rj-ventes-nb">—</span></div>
+        <div class="metric-card"><div class="metric-label">Encaissé du jour</div><div class="metric-value" id="rj-encaisse">—</div><span class="metric-badge badge-info">en caisse</span></div>
+        <div class="metric-card"><div class="metric-label">Décaissements</div><div class="metric-value" id="rj-decaiss">—</div><span class="metric-badge badge-danger" id="rj-decaiss-nb">—</span></div>
+        <div class="metric-card"><div class="metric-label">Solde net du jour</div><div class="metric-value" id="rj-solde">—</div><span class="metric-badge" id="rj-solde-badge">—</span></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Ventes enregistrées</span></div>
+          <div id="rj-detail-ventes"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Décaissements</span></div>
+          <div id="rj-detail-decaiss"></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Reprises</span></div>
+          <div id="rj-detail-rachats"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Connexions du jour</span></div>
+          <div id="rj-detail-connexions"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORIQUE CONNEXIONS -->
+    <section class="section" id="historique">
+      <div class="page-header">
+        <div><h1 class="page-title">Historique des connexions</h1><p class="page-sub" id="hist-count-label"></p></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="exporterHistorique()">⬇ Exporter CSV</button>
+          <button class="btn btn-danger small" onclick="viderHistorique()" id="btn-vider-hist">Vider l'historique</button>
+        </div>
+      </div>
+      <div class="filters-bar">
+        <input class="form-input" style="flex:1;min-width:160px" type="text" placeholder="Rechercher utilisateur..." id="hist-search" />
+        <select class="form-input filter-select" id="filtre-hist-role"><option value="">Tous les rôles</option><option value="admin">Administrateur</option><option value="gestionnaire">Gestionnaire</option><option value="vendeur">Vendeur</option></select>
+        <select class="form-input filter-select" id="filtre-hist-action"><option value="">Toutes actions</option><option value="connexion">Connexions</option><option value="déconnexion">Déconnexions</option></select>
+      </div>
+      <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="metric-card"><div class="metric-label">Connexions aujourd'hui</div><div class="metric-value" id="hist-conn-jour">—</div></div>
+        <div class="metric-card"><div class="metric-label">Utilisateurs actifs (7j)</div><div class="metric-value" id="hist-users-actifs">—</div></div>
+        <div class="metric-card"><div class="metric-label">Dernière connexion</div><div class="metric-value" id="hist-last-conn" style="font-size:14px">—</div></div>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Heure</th><th>Utilisateur</th><th>Rôle</th><th>Action</th></tr></thead>
+          <tbody id="hist-body"></tbody>
+        </table>
+      </div></div>
+    </section>
+  </main>
+</div>
+</div>
+
+<!-- ============================================================
+     MODALS
+     ============================================================ -->
+
+<!-- NOUVELLE VENTE -->
+<div class="modal-backdrop" id="modal-nouvelle-vente">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Nouvelle vente</div><button class="modal-close" onclick="closeModal('modal-nouvelle-vente')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="v-date" /></div>
+      <div class="form-group client-picker-group">
+        <label class="form-label">Client *</label>
+        <div class="client-picker" id="picker-v-client">
+          <input class="form-input client-picker-input" type="text"
+            placeholder="Nom ou téléphone..."
+            id="v-client-search"
+            autocomplete="off"
+            oninput="filtrerClientPicker('v-client')"
+            onfocus="ouvrirClientPicker('v-client')"
+            onblur="fermerClientPicker('v-client', 300)" />
+          <input type="hidden" id="v-client" />
+          <div class="client-picker-dropdown" id="picker-drop-v-client" style="display:none"></div>
+        </div>
+        <button type="button" class="btn-add-client-inline" onclick="ouvrirMiniClient('v-client')">+ Nouveau client</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label class="form-label">Description *</label><input class="form-input" type="text" placeholder="Description..." id="v-description" /></div>
+      <div class="form-group"><label class="form-label">Paiement</label>
+        <select class="form-input" id="v-paiement" onchange="onChangePaiementVente()">
+          <option value="especes">Especes</option>
+          <option value="wave">Wave</option>
+          <option value="orange-money">Orange Money</option>
+          <option value="carte">Carte bancaire</option>
+          <option value="livraison">Paiement livraison</option>
+          <option value="compte">Compte epargne client</option>
+        </select>
+      </div>
+    </div>
+    <div id="v-compte-bloc" style="display:none;margin-bottom:12px;padding:12px;background:var(--success-bg);border-radius:var(--radius-md)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:600;color:var(--success-text)" id="v-compte-nom">—</span>
+        <span style="font-size:18px;font-weight:700;color:var(--success-text)" id="v-compte-solde">—</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Le montant sera automatiquement deduit du compte epargne.</div>
+    </div>
+    <!-- Sélecteur article stock -->
+    <div class="form-group" style="margin-bottom:8px">
+      <label class="form-label">Article en stock *</label>
+      <select class="form-input" id="v-stock-ref" onchange="onSelectStockVente('v')">
+        <option value="">— Choisir un article en stock —</option>
+      </select>
+    </div>
+    <!-- Info stock sélectionné -->
+    <div id="v-stock-info" style="display:none;margin-bottom:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--text-secondary)" id="v-stock-label">—</span>
+        <span style="font-size:13px;font-weight:700;color:var(--success-text)" id="v-stock-dispo">—</span>
+      </div>
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--text-tertiary)">
+        <span>Poids dispo : <strong id="v-stock-poids-dispo" style="color:var(--text-primary)">—</strong></span>
+        <span>Articles dispo : <strong id="v-stock-qty-dispo" style="color:var(--text-primary)">—</strong></span>
+      </div>
+    </div>
+    <!-- Poids + Nombre articles vendus -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Poids vendu (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="v-poids-vente" oninput="checkPoidsVente()" />
+        <span class="form-hint">Laisser vide si inconnu</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre d'articles</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="v-nb-articles" oninput="checkPoidsVente()" />
+        <span class="form-hint">Informatif / déduction stock</span>
+      </div>
+    </div>
+    <!-- Champs cachés pour compatibilité -->
+    <input type="hidden" id="v-type-bijou" value="" />
+    <input type="hidden" id="v-carat" value="" />
+    <input type="hidden" id="v-local" value="0" />
+    <input type="hidden" id="v-importe" value="0" />
+    <input type="hidden" id="v-poids-or" value="" />
+    <input type="hidden" id="v-poids-simple-input" value="" />
+    <input type="hidden" id="v-provenance" value="" />
+    <div class="form-row-3">
+      <div class="form-group"><label class="form-label">Montant (F CFA) *</label><input class="form-input" type="number" min="0" placeholder="0" id="v-montant" oninput="calcRestant('v-montant','v-acompte','v-restant-disp')" /></div>
+      <div class="form-group"><label class="form-label">Acompte (F CFA)</label><input class="form-input" type="number" min="0" placeholder="Laisser vide = soldé" id="v-acompte" oninput="calcRestant('v-montant','v-acompte','v-restant-disp')" /></div>
+      <div class="form-group"><label class="form-label">Restant dû</label><input class="form-input restant-display" type="text" id="v-restant-disp" readonly placeholder="—" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-nouvelle-vente')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerVente()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODIFIER VENTE -->
+<div class="modal-backdrop" id="modal-edit-vente">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Modifier la vente <span id="edit-v-id-label" style="font-weight:400;color:var(--text-secondary)"></span></div><button class="modal-close" onclick="closeModal('modal-edit-vente')">✕</button></div>
+    <input type="hidden" id="edit-v-id" />
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="edit-v-date" /></div>
+      <div class="form-group client-picker-group">
+        <label class="form-label">Client *</label>
+        <div class="client-picker" id="picker-edit-v-client">
+          <input class="form-input client-picker-input" type="text"
+            placeholder="Nom ou téléphone..."
+            id="edit-v-client-search"
+            autocomplete="off"
+            oninput="filtrerClientPicker('edit-v-client')"
+            onfocus="ouvrirClientPicker('edit-v-client')"
+            onblur="fermerClientPicker('edit-v-client', 300)" />
+          <input type="hidden" id="edit-v-client" />
+          <div class="client-picker-dropdown" id="picker-drop-edit-v-client" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label class="form-label">Description *</label><input class="form-input" type="text" id="edit-v-description" /></div>
+      <div class="form-group"><label class="form-label">Paiement</label>
+        <select class="form-input" id="edit-v-paiement">
+          <option value="especes">Especes</option>
+          <option value="wave">Wave</option>
+          <option value="orange-money">Orange Money</option>
+          <option value="carte">Carte bancaire</option>
+          <option value="livraison">Livraison</option>
+          <option value="compte">Compte epargne</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Type de bijou</label>
+      <select class="form-input" id="edit-v-type-bijou" onchange="onChangeTypeBijou('edit-v')">
+        <option value="">— Choisir —</option>
+      </select>
+    </div>
+    <div id="edit-v-or-fields" style="display:none">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Provenance</label>
+          <select class="form-input" id="edit-v-provenance" onchange="onChangeProvenance('edit-v')">
+            <option value="local">Local</option>
+            <option value="importe">Importe</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carat</label>
+          <select class="form-input" id="edit-v-carat" onchange="afficherInfoCarat('edit-v-carat','edit-v-carat-badge')"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poids (g)</label>
+          <input class="form-input" type="number" step="0.01" id="edit-v-poids-or" oninput="syncPoidsOr('edit-v')" />
+        </div>
+      </div>
+      <div id="edit-v-carat-badge" class="carat-badge" style="display:none;margin-bottom:12px"></div>
+    </div>
+    <input type="hidden" id="edit-v-local" value="0" />
+    <input type="hidden" id="edit-v-importe" value="0" />
+    <div class="form-row-3">
+      <div class="form-group"><label class="form-label">Montant *</label><input class="form-input" type="number" id="edit-v-montant" oninput="calcRestant('edit-v-montant','edit-v-acompte','edit-v-restant-disp')" /></div>
+      <div class="form-group"><label class="form-label">Acompte</label><input class="form-input" type="number" id="edit-v-acompte" oninput="calcRestant('edit-v-montant','edit-v-acompte','edit-v-restant-disp')" /></div>
+      <div class="form-group"><label class="form-label">Restant dû</label><input class="form-input restant-display" type="text" id="edit-v-restant-disp" readonly /></div>
+    </div>
+    <div class="modal-actions" style="flex-wrap:wrap;gap:8px">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-vente')">Annuler</button>
+      <button class="btn" id="btn-add-acompte" style="background:var(--warning-bg);color:var(--warning-text);border-color:transparent;display:none" onclick="ajouterAcompteVente()">+ Acompte partiel</button>
+      <button class="btn" id="btn-regler-total" style="background:var(--success-bg);color:var(--success-text);border-color:transparent;display:none" onclick="reglerTotalVente()">✓ Régler total</button>
+      <button class="btn btn-primary" onclick="sauvegarderVente()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- AJOUTER PRODUIT STOCK -->
+<div class="modal-backdrop" id="modal-add-produit">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Ajouter un article au stock</div><button class="modal-close" onclick="closeModal('modal-add-produit')">✕</button></div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Designation *</label>
+      <input class="form-input" placeholder="ex: Collier or 18k, Bracelet argent..." id="p-nom" />
+    </div>
+    <!-- Type de bijou EN PREMIER -->
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Type de bijou *</label>
+      <select class="form-input" id="p-type-bijou" onchange="onChangeTypeBijou('p')">
+        <option value="">— Choisir le type —</option>
+      </select>
+    </div>
+    <!-- Champs Or conditionnels : Provenance → Carat → Poids -->
+    <div id="p-or-fields" style="display:none;margin-bottom:12px">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Provenance</label>
+          <select class="form-input" id="p-provenance" onchange="onChangeProvenance('p')">
+            <option value="local">Local</option>
+            <option value="importe">Importe</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carat</label>
+          <select class="form-input" id="p-carat" onchange="afficherInfoCarat('p-carat','p-carat-badge')">
+            <option value="">— Choisir —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poids global (g) *</label>
+          <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="p-poids" oninput="syncPoidsOr('p')" />
+        </div>
+      </div>
+      <div id="p-carat-badge" class="carat-badge" style="display:none;margin-bottom:8px"></div>
+    </div>
+    <!-- Poids simple pour types sans or -->
+    <div id="p-poids-simple" style="display:none;margin-bottom:12px">
+      <div class="form-group" style="max-width:200px">
+        <label class="form-label">Poids global (g) *</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="p-poids-s" />
+      </div>
+    </div>
+    <input type="hidden" id="p-ref" value="" />
+    <input type="hidden" id="p-type" value="autre" />
+    <!-- Seuil alerte -->
+    <div class="form-row">
+      <div class="form-group" style="max-width:160px">
+        <label class="form-label">Nombre d'articles</label>
+        <input class="form-input" type="number" min="1" placeholder="1" id="p-qty" value="1" />
+        <span class="form-hint">Informatif uniquement</span>
+      </div>
+      <div class="form-group" style="max-width:200px">
+        <label class="form-label">Seuil alerte (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="50" id="p-seuil" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-produit')">Annuler</button>
+      <button class="btn btn-primary" onclick="ajouterProduit()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- SORTIE DE STOCK (admin only) -->
+<div class="modal-backdrop" id="modal-add-sortie">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nouvelle sortie de stock</div><button class="modal-close" onclick="closeModal('modal-add-sortie')">✕</button></div>
+    <div class="role-banner role-admin"><span>🔒</span> Operation reservee a l'administrateur</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Date *</label>
+      <input class="form-input" type="date" id="s-date" style="max-width:200px" />
+    </div>
+    <!-- Sélecteur article stock -->
+    <div class="form-group" style="margin-bottom:8px">
+      <label class="form-label">Article en stock *</label>
+      <select class="form-input" id="s-stock-ref" onchange="onSelectStockSortie()">
+        <option value="">— Choisir un article en stock —</option>
+      </select>
+    </div>
+    <!-- Stock disponible -->
+    <div id="s-stock-info" style="display:none;margin-bottom:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--text-secondary)" id="s-stock-label">—</span>
+      </div>
+      <div style="display:flex;gap:16px;font-size:12px">
+        <span>Poids : <strong id="s-stock-poids" style="color:var(--success-text)">—</strong></span>
+        <span>Articles : <strong id="s-stock-qty" style="color:var(--success-text)">—</strong></span>
+      </div>
+    </div>
+    <!-- Poids + Nb articles à sortir -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Poids à sortir (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="s-poids" oninput="previewSortie()" />
+        <span class="form-hint">Laisser vide si inconnu</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre d'articles</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="s-qty" />
+        <span class="form-hint">Informatif uniquement</span>
+      </div>
+    </div>
+    <input type="hidden" id="s-type-bijou" value="" />
+    <input type="hidden" id="s-carat" value="" />
+    <input type="hidden" id="s-provenance" value="" />
+    <!-- Poids + Nombre articles -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Poids a sortir (g) *</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="s-poids" oninput="previewSortie()" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre d'articles</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="s-qty" />
+        <span class="form-hint">Informatif uniquement</span>
+      </div>
+    </div>
+    <!-- Motif (optionnel) + champ libre -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Motif</label>
+        <select class="form-input" id="s-motif">
+          <option value="">— Optionnel —</option>
+          <option>Don / cadeau</option>
+          <option>Casse / defaut fabrication</option>
+          <option>Perte / vol</option>
+          <option>Retour fournisseur</option>
+          <option>Usage interne / reparation</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Precisions (optionnel)</label>
+        <input class="form-input" type="text" placeholder="Details supplementaires..." id="s-commentaire" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-sortie')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerSortie()">Valider la sortie</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACHAT -->
+<div class="modal-backdrop" id="modal-add-achat">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Nouvel achat de bijoux</div><button class="modal-close" onclick="closeModal('modal-add-achat')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="a-date" /></div>
+      <div class="form-group"><label class="form-label">Fournisseur *</label><input class="form-input" type="text" placeholder="Nom du fournisseur" id="a-fournisseur" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Description *</label><input class="form-input" type="text" placeholder="ex: Lot or brut 22k, Parures or blanc..." id="a-description" /></div>
+    <div class="form-row-3">
+      <div class="form-group"><label class="form-label">Carat</label><select class="form-input" id="a-carat"></select></div>
+      <div class="form-group"><label class="form-label">Poids (g) *</label><input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="a-poids" oninput="calcAchatTotal()" /></div>
+      <div class="form-group"><label class="form-label">Prix / g (F CFA) *</label><input class="form-input" type="number" min="0" placeholder="0" id="a-prix-g" oninput="calcAchatTotal()" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Montant total calculé</label>
+      <input class="form-input restant-display" type="text" id="a-total-disp" readonly placeholder="—" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-achat')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerAchat()">Enregistrer l'achat</button>
+    </div>
+  </div>
+</div>
+
+<!-- DÉCAISSEMENT -->
+<div class="modal-backdrop" id="modal-add-decaiss">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nouveau décaissement</div><button class="modal-close" onclick="closeModal('modal-add-decaiss')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="d-date" /></div>
+      <div class="form-group"><label class="form-label">Catégorie *</label>
+        <select class="form-input" id="d-categorie">
+          <option value="">— Choisir —</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Description *</label><input class="form-input" type="text" placeholder="ex: Loyer boutique Mars 2026" id="d-description" /></div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Montant (F CFA) *</label><input class="form-input" type="number" min="0" placeholder="0" id="d-montant" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-decaiss')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerDecaissement()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT -->
+<div class="modal-backdrop" id="modal-add-client">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nouveau client</div><button class="modal-close" onclick="closeModal('modal-add-client')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Prénom &amp; Nom *</label><input class="form-input" placeholder="Aminata Diallo" id="c-nom" /></div>
+      <div class="form-group"><label class="form-label">Téléphone *</label><input class="form-input" placeholder="77 XXX XX XX" id="c-tel" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="email@exemple.com" id="c-email" /></div>
+      <div class="form-group"><label class="form-label">Adresse</label><input class="form-input" placeholder="Quartier, ville" id="c-adresse" /></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Code PIN portail client (4 chiffres)</label>
+      <input class="form-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••" id="c-pin" style="letter-spacing:6px;font-size:18px" />
+      <small style="color:var(--text-tertiary);font-size:11px">Le client utilisera ce code pour accéder à son espace sur client.html</small>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="ajouterClient()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPTE CLIENT ÉPARGNE -->
+<div class="modal-backdrop" id="modal-add-compte-client">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Nouveau compte épargne bijoux</div><button class="modal-close" onclick="closeModal('modal-add-compte-client')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group client-picker-group">
+        <label class="form-label">Client *</label>
+        <div class="client-picker" id="picker-cc-client">
+          <input class="form-input client-picker-input" type="text"
+            placeholder="Nom ou téléphone..."
+            id="cc-client-search"
+            autocomplete="off"
+            oninput="filtrerClientPicker('cc-client')"
+            onfocus="ouvrirClientPicker('cc-client')"
+            onblur="fermerClientPicker('cc-client', 300)" />
+          <input type="hidden" id="cc-client" />
+          <div class="client-picker-dropdown" id="picker-drop-cc-client" style="display:none"></div>
+        </div>
+        <button type="button" class="btn-add-client-inline" onclick="ouvrirMiniClient('cc-client')">+ Nouveau client</button>
+      </div>
+      <div class="form-group"><label class="form-label">Date d'ouverture *</label><input class="form-input" type="date" id="cc-date" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Premier dépôt (F CFA) *</label>
+      <input class="form-input" type="number" min="0" placeholder="0" id="cc-depot-init" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-compte-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="creerCompteClient()">Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- DÉPÔT COMPTE CLIENT -->
+<div class="modal-backdrop" id="modal-depot-cc">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Depot / Ajustement compte</div><button class="modal-close" onclick="closeModal('modal-depot-cc')">✕</button></div>
+    <input type="hidden" id="depot-cc-id" />
+    <div id="depot-cc-info"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="depot-cc-date" /></div>
+      <div class="form-group"><label class="form-label">Montant (F CFA) *</label><input class="form-input" type="number" min="0" placeholder="0" id="depot-cc-montant" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Note</label><input class="form-input" type="text" placeholder="ex: Depot mensuel, Complement vente..." id="depot-cc-note" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-depot-cc')">Annuler</button>
+      <button class="btn btn-primary" onclick="ajouterDepotCC()">Valider le depot</button>
+    </div>
+  </div>
+</div>
+
+<!-- BIJOU EN ARRHES -->
+<div class="modal-backdrop" id="modal-add-bijou-arr">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Nouvelle réservation — Bijou en arrhes</div><button class="modal-close" onclick="closeModal('modal-add-bijou-arr')">✕</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="ba-date" /></div>
+      <div class="form-group client-picker-group">
+        <label class="form-label">Client *</label>
+        <div class="client-picker" id="picker-ba-client">
+          <input class="form-input client-picker-input" type="text"
+            placeholder="Nom ou téléphone..."
+            id="ba-client-search"
+            autocomplete="off"
+            oninput="filtrerClientPicker('ba-client')"
+            onfocus="ouvrirClientPicker('ba-client')"
+            onblur="fermerClientPicker('ba-client', 300)" />
+          <input type="hidden" id="ba-client" />
+          <div class="client-picker-dropdown" id="picker-drop-ba-client" style="display:none"></div>
+        </div>
+        <button type="button" class="btn-add-client-inline" onclick="ouvrirMiniClient('ba-client')">+ Nouveau client</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:8px"><label class="form-label">Bijou réservé *</label>
+      <select class="form-input" id="ba-article" onchange="remplirPrixBijouArr()"><option value="">— Choisir un article en stock —</option></select>
+    </div>
+    <!-- Info stock -->
+    <div id="ba-stock-info" style="display:none;margin-bottom:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+        <span style="font-size:12px;color:var(--text-secondary)" id="ba-stock-label">—</span>
+      </div>
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--text-tertiary)">
+        <span>Poids dispo : <strong id="ba-stock-poids-dispo" style="color:var(--success-text)">—</strong></span>
+        <span>Articles dispo : <strong id="ba-stock-qty-dispo" style="color:var(--success-text)">—</strong></span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Poids réservé (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="ba-poids" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre d'articles</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="ba-nb-articles" />
+      </div>
+      <div class="form-group"><label class="form-label">Prix total (F CFA) *</label><input class="form-input" type="number" min="0" id="ba-prix" oninput="calcBijouArrRestant()" /></div>
+      <div class="form-group"><label class="form-label">Arrhes versées *</label><input class="form-input" type="number" min="0" placeholder="0" id="ba-arrhes" oninput="calcBijouArrRestant()" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Restant dû</label><input class="form-input restant-display" type="text" id="ba-restant-disp" readonly placeholder="—" /></div>
+      <div class="form-group"><label class="form-label">Date d'échéance *</label><input class="form-input" type="date" id="ba-echeance" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-bijou-arr')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerBijouArr()">Créer la réservation</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAIEMENT ARRHES (ancien) -->
+<div class="modal-backdrop" id="modal-paiement-arr" style="display:none">
+  <div class="modal"><input type="hidden" id="paiement-arr-id" /></div>
+</div>
+
+<!-- FINALISER PAIEMENT VENTE -->
+<div class="modal-backdrop" id="modal-finaliser">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Finaliser le paiement</div>
+      <button class="modal-close" onclick="closeModal('modal-finaliser')">✕</button>
+    </div>
+    <input type="hidden" id="fin-vente-id" />
+    <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:13px">
+      <div id="fin-info-client" style="font-weight:600;margin-bottom:4px"></div>
+      <div id="fin-info-desc" style="color:var(--text-secondary);margin-bottom:8px"></div>
+      <div style="display:flex;gap:20px">
+        <span>Total : <strong id="fin-info-total"></strong></span>
+        <span style="color:var(--success-text)">Versé : <strong id="fin-info-acompte"></strong></span>
+        <span style="color:var(--warning-text)">Restant : <strong id="fin-info-restant"></strong></span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" type="date" id="fin-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Montant encaissé (F CFA) *</label>
+        <input class="form-input" type="number" min="1" id="fin-montant" placeholder="0" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">Mode de paiement</label>
+      <select class="form-input" id="fin-paiement">
+        <option value="especes">Espèces</option>
+        <option value="wave">Wave</option>
+        <option value="orange-money">Orange Money</option>
+        <option value="virement">Virement</option>
+        <option value="cheque">Chèque</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-finaliser')">Annuler</button>
+      <button class="btn btn-primary" onclick="confirmerFinalisation()">✓ Valider l'encaissement</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMBOURSEMENT -->
+<div class="modal-backdrop" id="modal-remboursement">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--danger-text)">⟲ Remboursement client</div>
+      <button class="modal-close" onclick="closeModal('modal-remboursement')">✕</button>
+    </div>
+    <input type="hidden" id="remb-vente-id" />
+    <div style="background:rgba(244,67,54,0.06);border:1px solid rgba(244,67,54,0.2);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:13px">
+      <div id="remb-info-client" style="font-weight:600;margin-bottom:4px"></div>
+      <div id="remb-info-desc" style="color:var(--text-secondary);margin-bottom:6px"></div>
+      <div>Acompte versé par le client : <strong id="remb-info-acompte" style="color:var(--danger-text)"></strong></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" type="date" id="remb-date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Montant remboursé (F CFA) *</label>
+        <input class="form-input" type="number" min="0" id="remb-montant" placeholder="0" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">Motif du remboursement</label>
+      <input class="form-input" type="text" id="remb-motif" placeholder="Ex : Article non disponible, annulation..." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-remboursement')">Annuler</button>
+      <button class="btn" style="background:var(--danger-bg);color:var(--danger-text);border:1px solid var(--danger-text)" onclick="confirmerRemboursement()">Confirmer le remboursement</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL CRÉER UTILISATEUR -->
+<div class="modal-backdrop" id="modal-add-user">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nouveau compte utilisateur</div><button class="modal-close" onclick="closeModal('modal-add-user')">✕</button></div>
+    <div class="role-banner role-admin" style="margin-bottom:12px"><span>🔒</span> Réservé à l'administrateur</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nom complet *</label><input class="form-input" placeholder="ex: Fatou Ndiaye" id="u-nom" /></div>
+      <div class="form-group"><label class="form-label">Login *</label><input class="form-input" placeholder="ex: fatou" id="u-login" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Mot de passe *</label><input class="form-input" type="password" id="u-password" /></div>
+      <div class="form-group"><label class="form-label">Confirmer *</label><input class="form-input" type="password" id="u-password2" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Rôle *</label>
+      <select class="form-input" id="u-role">
+        <option value="vendeur">Vendeur</option>
+        <option value="gestionnaire">Gestionnaire Stock</option>
+        <option value="admin">Administrateur</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-user')">Annuler</button>
+      <button class="btn btn-primary" onclick="creerUtilisateur()">Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MODIFIER UTILISATEUR -->
+<div class="modal-backdrop" id="modal-edit-user">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Modifier le compte — <span id="edit-u-label" style="font-weight:400"></span></div><button class="modal-close" onclick="closeModal('modal-edit-user')">✕</button></div>
+    <input type="hidden" id="edit-u-id" />
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nom complet</label><input class="form-input" id="edit-u-nom" /></div>
+      <div class="form-group"><label class="form-label">Rôle</label>
+        <select class="form-input" id="edit-u-role">
+          <option value="vendeur">Vendeur</option>
+          <option value="gestionnaire">Gestionnaire Stock</option>
+          <option value="admin">Administrateur</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nouveau mot de passe</label><input class="form-input" type="password" placeholder="Laisser vide pour conserver" id="edit-u-password" /></div>
+      <div class="form-group"><label class="form-label">Confirmer</label><input class="form-input" type="password" id="edit-u-password2" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-user')">Annuler</button>
+      <button class="btn btn-primary" onclick="sauvegarderUtilisateur()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FACTURE PROFESSIONNELLE -->
+<div class="modal-backdrop" id="modal-facture">
+  <div class="modal" style="width:700px;max-width:98vw;max-height:95vh">
+    <div class="modal-header">
+      <div class="modal-title">Facture</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="imprimerFacture()">🖨 Imprimer / PDF</button>
+        <button class="modal-close" onclick="closeModal('modal-facture')">✕</button>
+      </div>
+    </div>
+    <div id="facture-content" style="background:#fff;border-radius:8px;padding:0"></div>
+  </div>
+</div>
+
+<!-- MINI MODAL NOUVEAU CLIENT RAPIDE -->
+<div class="modal-backdrop" id="modal-mini-client">
+  <div class="modal" style="width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Nouveau client</div>
+      <button class="modal-close" onclick="closeMiniClient()">✕</button>
+    </div>
+    <input type="hidden" id="mini-client-target" />
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Prénom &amp; Nom *</label><input class="form-input" placeholder="Aminata Diallo" id="mini-c-nom" /></div>
+      <div class="form-group"><label class="form-label">Téléphone *</label><input class="form-input" placeholder="77 XXX XX XX" id="mini-c-tel" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Adresse (optionnel)</label>
+      <input class="form-input" placeholder="Quartier, ville" id="mini-c-adresse" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeMiniClient()">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerMiniClient()">Créer &amp; sélectionner</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RACHAT BIJOU CLIENT -->
+<div class="modal-backdrop" id="modal-add-achat-client">
+  <div class="modal modal-large">
+    <div class="modal-header">
+      <div class="modal-title">Nouvelle reprise de bijou</div>
+      <button class="modal-close" onclick="closeModal('modal-add-achat-client')">✕</button>
+    </div>
+    <!-- Date + Client -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" type="date" id="ac-date" />
+      </div>
+      <div class="form-group client-picker-group">
+        <label class="form-label">Client *</label>
+        <div class="client-picker" id="picker-ac-client">
+          <input class="form-input client-picker-input" type="text" placeholder="Nom ou telephone..."
+            id="ac-client-search" autocomplete="off"
+            oninput="filtrerClientPicker('ac-client')"
+            onfocus="ouvrirClientPicker('ac-client')"
+            onblur="fermerClientPicker('ac-client', 300)" />
+          <input type="hidden" id="ac-client" />
+          <div class="client-picker-dropdown" id="picker-drop-ac-client" style="display:none"></div>
+        </div>
+        <button type="button" class="btn-add-client-inline" onclick="ouvrirMiniClient('ac-client')">+ Nouveau client</button>
+      </div>
+    </div>
+    <!-- Description -->
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Description *</label>
+      <input class="form-input" type="text" placeholder="ex: Reprise collier, bracelet or..." id="ac-description" />
+    </div>
+    <!-- Type de bijou EN PREMIER -->
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Type de bijou *</label>
+      <select class="form-input" id="ac-type-bijou" onchange="onChangeTypeBijou('ac')">
+        <option value="">— Choisir le type —</option>
+      </select>
+    </div>
+    <!-- Champs Or (conditionnels) -->
+    <div id="ac-or-fields" style="display:none;margin-bottom:12px">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Provenance *</label>
+          <select class="form-input" id="ac-provenance" onchange="onChangeProvenance('ac')">
+            <option value="local">Local</option>
+            <option value="importe">Importe</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carat *</label>
+          <select class="form-input" id="ac-carat" onchange="afficherInfoCarat('ac-carat','ac-carat-badge')">
+            <option value="">— Choisir —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poids (g) *</label>
+          <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="ac-poids" oninput="syncPoidsOr('ac')" />
+        </div>
+      </div>
+      <div id="ac-carat-badge" class="carat-badge" style="display:none;margin-bottom:8px"></div>
+    </div>
+    <!-- Poids pour types sans or -->
+    <div id="ac-poids-simple" style="display:none;margin-bottom:12px">
+      <div class="form-group">
+        <label class="form-label">Poids (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="ac-poids-s" />
+      </div>
+    </div>
+    <!-- Champs cachés -->
+    <input type="hidden" id="ac-local" value="0" />
+    <input type="hidden" id="ac-importe" value="0" />
+    <!-- Prix + Note + Photo -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Prix de reprise (F CFA) *</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="ac-prix" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note (optionnel)</label>
+        <input class="form-input" type="text" placeholder="Etat du bijou, observations..." id="ac-note" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label">Photo du bijou (optionnel)</label>
+      <input class="form-input" type="file" accept="image/*" id="ac-photo" onchange="previewReprise(this)" style="padding:6px 10px;cursor:pointer" />
+    </div>
+    <div id="ac-photo-preview" style="display:none;margin-bottom:12px">
+      <img id="ac-photo-img" src="" alt="Apercu" style="max-height:140px;max-width:100%;border-radius:var(--radius-md);border:0.5px solid var(--border-light);object-fit:cover" />
+      <button type="button" class="btn small btn-danger" style="margin-top:6px" onclick="supprimerPhotoReprise()">Supprimer la photo</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-achat-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerAchatClient()">Enregistrer la reprise</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJUSTER COMPTE CLIENT -->
+<div class="modal-backdrop" id="modal-ajust-cc">
+  <div class="modal modal-large">
+    <div class="modal-header"><div class="modal-title">Utiliser le compte epargne pour une vente</div><button class="modal-close" onclick="closeModal('modal-ajust-cc')">x</button></div>
+    <input type="hidden" id="ajust-cc-id" />
+    <div id="ajust-cc-info" style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:14px;margin-bottom:14px"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Montant a deduire *</label><input class="form-input" type="number" min="0" id="ajust-cc-montant" oninput="previewAjustCC()" /></div>
+      <div class="form-group"><label class="form-label">Solde restant</label><input class="form-input restant-display" type="text" id="ajust-cc-restant" readonly /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Description vente *</label><input class="form-input" type="text" id="ajust-cc-desc" /></div>
+    <div class="form-group" style="margin-bottom:12px"><label class="form-label">Carat</label><select class="form-input" id="ajust-cc-carat"><option value="">— Optionnel —</option></select></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-ajust-cc')">Annuler</button>
+      <button class="btn btn-primary" onclick="validerAjustCC()">Valider et creer la vente</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COMPLEMENT COMPTE ÉPARGNE -->
+<div class="modal-backdrop" id="modal-complement-cc">
+  <div class="modal modal-large">
+    <div class="modal-header">
+      <div class="modal-title">Solde insuffisant — Complément requis</div>
+      <button class="modal-close" onclick="closeModal('modal-complement-cc')">✕</button>
+    </div>
+    <input type="hidden" id="complement-cc-id" />
+    <input type="hidden" id="complement-cc-montant" />
+    <input type="hidden" id="complement-cc-date" />
+    <input type="hidden" id="complement-cc-desc" />
+    <input type="hidden" id="complement-cc-carat" />
+    <input type="hidden" id="complement-cc-type" />
+    <!-- Résumé -->
+    <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:14px;margin-bottom:16px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:10px" id="complement-cc-client">—</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div style="text-align:center;padding:10px;background:var(--success-bg);border-radius:var(--radius-md)">
+          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">Solde compte</div>
+          <div style="font-size:18px;font-weight:700;color:var(--success-text)" id="complement-cc-solde">—</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:var(--danger-bg);border-radius:var(--radius-md)">
+          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">Manque</div>
+          <div style="font-size:18px;font-weight:700;color:var(--danger-text)" id="complement-cc-manque">—</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:var(--info-bg);border-radius:var(--radius-md)">
+          <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px">Total vente</div>
+          <div style="font-size:18px;font-weight:700;color:var(--info-text)" id="complement-cc-total">—</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;padding:10px 14px;background:var(--warning-bg);border-radius:var(--radius-md)">
+      Le solde du compte sera utilisé entièrement. Le client doit compléter le montant manquant par un autre mode de paiement.
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Montant du complément (F CFA) *</label>
+        <input class="form-input" type="number" min="0" id="complement-cc-montant-comp" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mode de paiement du complément</label>
+        <select class="form-input" id="complement-cc-paiement">
+          <option value="especes">Espèces</option>
+          <option value="wave">Wave</option>
+          <option value="orange-money">Orange Money</option>
+          <option value="carte">Carte bancaire</option>
+          <option value="livraison">Paiement à la livraison</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-complement-cc')">Annuler</button>
+      <button class="btn btn-primary" onclick="validerComplementCC()">Valider la vente avec complément</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+  <!-- Supabase SDK -->
+  <script src="js/security.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/app.js"></script>
+
+<!-- MODAL AJUSTER STOCK -->
+<div class="modal-backdrop" id="modal-ajust-stock">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ajouter au stock</div>
+      <button class="modal-close" onclick="closeModal('modal-ajust-stock')">✕</button>
+    </div>
+    <input type="hidden" id="ajust-stock-ref" />
+    <div id="ajust-stock-nom" style="font-weight:600;font-size:15px;margin-bottom:6px;color:var(--text-primary)">—</div>
+    <!-- Stock actuel -->
+    <div style="display:flex;gap:16px;margin-bottom:14px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+      <span style="font-size:12px;color:var(--text-secondary)" id="ajust-stock-poids-actuel">—</span>
+      <span style="font-size:12px;color:var(--text-secondary)" id="ajust-stock-qty-actuel">—</span>
+    </div>
+    <!-- Quantités à ajouter -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Poids à ajouter (g)</label>
+        <input class="form-input" type="number" step="0.01" min="0" placeholder="0,00" id="ajust-stock-poids" />
+        <span class="form-hint">S'ajoute au stock existant</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Articles à ajouter</label>
+        <input class="form-input" type="number" min="0" placeholder="0" id="ajust-stock-qty" />
+        <span class="form-hint">S'ajoute au stock existant</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-ajust-stock')">Annuler</button>
+      <button class="btn btn-primary" onclick="validerAjustStock()">Ajouter au stock</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
