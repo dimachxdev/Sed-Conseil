@@ -9,12 +9,14 @@ import { buildMetadata } from '@/lib/seo';
 
 export const dynamicParams = false;
 export function generateStaticParams() { return CASES.filter((c) => c.blocks).map((c) => ({ slug: c.slug })); }
-export function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
   const c = getCase(params.slug);
   return c ? buildMetadata({ title: c.metaTitle, description: c.description, path: `/cas-clients/${c.slug}`, type: 'article' }) : {};
 }
 
-export default function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   const c = getCase(params.slug);
   if (!c) notFound();
   return (

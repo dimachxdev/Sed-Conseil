@@ -13,7 +13,8 @@ import { buildMetadata } from '@/lib/seo';
 
 export const dynamicParams = false;
 export function generateStaticParams() { return ARTICLES.map((a) => ({ slug: a.slug })); }
-export function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
   const a = getArticle(params.slug);
   if (!a) return {};
   const m = buildMetadata({ title: a.metaTitle, description: a.description, path: `/blog/${a.slug}`, type: 'article' });
@@ -27,7 +28,8 @@ const LABELS = {
   '/expertises/copywriting-contenus-ia': 'Copywriting & contenus IA', '/methode': 'Notre méthode', '/cas-clients/anox': 'Cas client : AnoX',
 };
 
-export default function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   const a = getArticle(params.slug);
   if (!a) notFound();
   const faq = a.blocks.find((b) => b.t === 'faq');
