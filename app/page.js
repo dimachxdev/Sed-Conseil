@@ -71,22 +71,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Preuve */}
-      <section aria-labelledby="preuve" className="border-y border-slate-200 bg-white">
-        <div className="container-sead flex flex-col items-center gap-4 py-8 sm:flex-row sm:justify-between">
-          <h2 id="preuve" className="text-sm font-semibold uppercase tracking-wide text-slate-500">Ils nous confient leurs campagnes</h2>
-          <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-            {SITE.clients.map((c) => (
-              <li key={c.name} className="flex h-12 items-center">
-                {c.logo
-                  ? <Image src={c.logo} alt={c.name} width={160} height={48} className="h-10 w-auto object-contain opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0" />
-                  : <span className="text-lg font-bold text-slate-700">{c.name}</span>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {/* Problème */}
       <section className="container-sead py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-2">
